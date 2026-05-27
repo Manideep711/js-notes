@@ -1,0 +1,2034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Namaste JavaScript — Complete Season 1 Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;1,400&family=Outfit:wght@400;500;600;700;800;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0b0e17;
+  --surface: #111520;
+  --surface2: #181d2e;
+  --surface3: #1e2438;
+  --border: #252d45;
+  --border2: #1a2035;
+  --gold: #f5a623;
+  --gold2: #ffcc66;
+  --teal: #3ecf8e;
+  --teal2: #7fdfb8;
+  --red: #e05c5c;
+  --blue: #6ea8fe;
+  --purple: #c4b5fd;
+  --text: #dce3f0;
+  --text2: #8a96b0;
+  --text3: #4a5580;
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Outfit', sans-serif;
+  --serif: 'Merriweather', serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 1.85;
+}
+
+/* ═══ SCROLLBAR ═══ */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ═══ PROGRESS ═══ */
+#prog-bar { position: fixed; top:0; left:270px; right:0; height:2px; background:var(--border); z-index:300; }
+#prog-fill { height:100%; background: linear-gradient(90deg,var(--gold),var(--teal)); width:0%; transition:width .1s; }
+
+/* ═══ SIDEBAR ═══ */
+#sidebar {
+  position: fixed; top:0; left:0;
+  width:270px; height:100vh;
+  background: var(--surface);
+  border-right:1px solid var(--border2);
+  display:flex; flex-direction:column;
+  z-index:200; overflow:hidden;
+}
+.sb-head {
+  padding:24px 20px 18px;
+  border-bottom:1px solid var(--border2);
+  background: var(--surface);
+  position:sticky; top:0; z-index:2;
+  flex-shrink:0;
+}
+.sb-eyebrow {
+  font-family: var(--mono);
+  font-size:10px; letter-spacing:.18em;
+  text-transform:uppercase;
+  color: var(--gold); margin-bottom:8px;
+}
+.sb-title {
+  font-family: var(--sans);
+  font-size:20px; font-weight:900;
+  color: var(--text); line-height:1.15;
+}
+.sb-title span { color: var(--gold); }
+.sb-search { padding:10px 18px; border-bottom:1px solid var(--border2); flex-shrink:0; }
+.sb-search input {
+  width:100%; background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:6px; padding:7px 11px;
+  color:var(--text); font-family:var(--mono);
+  font-size:11px; outline:none;
+  transition: border-color .2s;
+}
+.sb-search input:focus { border-color: var(--gold); }
+.sb-search input::placeholder { color: var(--text3); }
+.sb-nav { overflow-y:auto; flex:1; padding-bottom:20px; }
+.sb-nav::-webkit-scrollbar { width:3px; }
+.sb-nav::-webkit-scrollbar-thumb { background:var(--border); }
+.nav-section {
+  font-family:var(--mono); font-size:9.5px;
+  letter-spacing:.15em; text-transform:uppercase;
+  color:var(--text3); padding:14px 20px 5px;
+}
+.nav-link {
+  display:flex; align-items:flex-start; gap:10px;
+  padding:7px 20px; text-decoration:none;
+  font-family:var(--sans); font-size:12.5px;
+  font-weight:500; color:var(--text2);
+  border-left:2px solid transparent;
+  transition:all .18s; line-height:1.35;
+}
+.nav-link:hover, .nav-link.active {
+  color:var(--gold); border-left-color:var(--gold);
+  background:rgba(245,166,35,.05);
+}
+.nav-num { font-family:var(--mono); font-size:9px; color:var(--text3); margin-top:2px; min-width:24px; }
+
+/* ═══ MAIN ═══ */
+#main { margin-left:270px; padding:0 64px 120px; max-width:980px; }
+
+/* ═══ HERO ═══ */
+.hero {
+  padding:72px 0 52px;
+  border-bottom:1px solid var(--border2);
+  margin-bottom:64px;
+}
+.hero-ey {
+  font-family:var(--mono); font-size:11px;
+  letter-spacing:.2em; text-transform:uppercase;
+  color:var(--gold); margin-bottom:16px;
+}
+.hero-h1 {
+  font-family:var(--sans); font-size:clamp(38px,5vw,60px);
+  font-weight:900; line-height:1.05; color:var(--text);
+  margin-bottom:20px;
+}
+.hero-h1 em { color:var(--gold); font-style:normal; }
+.hero-sub { font-family:var(--serif); font-size:15.5px; color:var(--text2); max-width:560px; }
+.hero-tags { display:flex; flex-wrap:wrap; gap:8px; margin-top:24px; }
+.htag {
+  font-family:var(--mono); font-size:10.5px;
+  padding:4px 11px; border-radius:20px;
+  background:var(--surface2); border:1px solid var(--border);
+  color:var(--text2);
+}
+
+/* ═══ LECTURE SECTIONS ═══ */
+.lecture { margin-bottom:88px; scroll-margin-top:28px; }
+.lec-hd { display:flex; align-items:flex-start; gap:20px; margin-bottom:32px; }
+.lec-badge {
+  font-family:var(--mono); font-size:10px;
+  color:var(--gold); background:rgba(245,166,35,.1);
+  border:1px solid rgba(245,166,35,.25);
+  border-radius:6px; padding:6px 11px;
+  white-space:nowrap; margin-top:4px; letter-spacing:.06em;
+}
+.lec-title { font-family:var(--sans); font-size:28px; font-weight:800; color:var(--text); line-height:1.15; }
+.lec-sub { font-family:var(--mono); font-size:11.5px; color:var(--text2); margin-top:5px; }
+hr.div { border:none; border-top:1px solid var(--border2); margin:44px 0; }
+
+/* ═══ TYPOGRAPHY ═══ */
+h3 {
+  font-family:var(--sans); font-size:12px; font-weight:700;
+  letter-spacing:.14em; text-transform:uppercase;
+  color:var(--teal); margin:36px 0 13px;
+}
+h4 { font-family:var(--sans); font-size:16px; font-weight:700; color:var(--text); margin:26px 0 10px; }
+p { margin-bottom:14px; color:var(--text); }
+p code, li code {
+  font-family:var(--mono); font-size:12.5px;
+  background:rgba(62,207,142,.08); border:1px solid rgba(62,207,142,.18);
+  border-radius:4px; padding:1px 6px; color:var(--teal2);
+}
+ul, ol { padding-left:22px; margin-bottom:16px; }
+li { margin-bottom:7px; color:var(--text); }
+li::marker { color:var(--gold); }
+strong { color:var(--gold); }
+em.teal { color:var(--teal); font-style:italic; }
+
+/* ═══ CALLOUTS ═══ */
+.box {
+  border-radius:9px; padding:18px 22px;
+  margin:22px 0; border-left:3px solid;
+  font-family:var(--serif); font-size:15px;
+  line-height:1.75;
+}
+.box-label {
+  font-family:var(--mono); font-size:9.5px;
+  letter-spacing:.15em; text-transform:uppercase;
+  font-weight:600; margin-bottom:9px;
+}
+.gold-box { background:rgba(245,166,35,.07); border-color:var(--gold); }
+.gold-box .box-label { color:var(--gold); }
+.teal-box { background:rgba(62,207,142,.06); border-color:var(--teal); }
+.teal-box .box-label { color:var(--teal); }
+.red-box { background:rgba(224,92,92,.06); border-color:var(--red); }
+.red-box .box-label { color:var(--red); }
+.blue-box { background:rgba(110,168,254,.06); border-color:var(--blue); }
+.blue-box .box-label { color:var(--blue); }
+.purple-box { background:rgba(196,181,253,.06); border-color:var(--purple); }
+.purple-box .box-label { color:var(--purple); }
+
+/* ═══ INTERVIEW TIP ═══ */
+.itip {
+  background:linear-gradient(135deg,rgba(245,166,35,.09),rgba(245,166,35,.03));
+  border:1px solid rgba(245,166,35,.3);
+  border-radius:10px; padding:20px 24px; margin:24px 0;
+}
+.itip::before {
+  content:'💼  Interview Answer';
+  display:block; font-family:var(--mono);
+  font-size:9.5px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--gold);
+  margin-bottom:10px; font-weight:600;
+}
+.itip p { margin-bottom:0; }
+
+/* ═══ AKSHAY QUOTE ═══ */
+.akquote {
+  border-left:3px solid var(--purple);
+  padding:14px 20px; margin:22px 0;
+  background:rgba(196,181,253,.05);
+  border-radius:0 8px 8px 0;
+  font-style:italic; color:var(--text2);
+  font-size:15px;
+}
+.akquote::before { content:'"'; font-size:28px; color:var(--purple); line-height:0; vertical-align:-10px; margin-right:4px; }
+
+/* ═══ CODE ═══ */
+pre {
+  background:#060810;
+  border:1px solid var(--border);
+  border-radius:9px; padding:20px 22px;
+  overflow-x:auto; margin:18px 0;
+  position:relative;
+}
+pre::before {
+  content:attr(data-lang);
+  position:absolute; top:10px; right:14px;
+  font-family:var(--mono); font-size:9px;
+  color:var(--text3); letter-spacing:.1em;
+  text-transform:uppercase;
+}
+code {
+  font-family:var(--mono); font-size:13px;
+  line-height:1.75; color:#cdd6f4;
+}
+.kw { color:#cba6f7; }
+.fn { color:#89b4fa; }
+.str { color:#a6e3a1; }
+.num { color:#fab387; }
+.cmt { color:#585b70; font-style:italic; }
+.vr { color:#f38ba8; }
+.prop { color:#94e2d5; }
+
+/* ═══ DIAGRAM BOX ═══ */
+.diag {
+  background:#060810;
+  border:1px solid var(--border);
+  border-radius:9px; padding:22px 24px;
+  margin:20px 0; font-family:var(--mono);
+  font-size:12.5px; color:var(--text2);
+  line-height:2; white-space:pre;
+  overflow-x:auto;
+}
+.diag .dg { color:var(--gold); }
+.diag .dt { color:var(--teal); }
+.diag .db { color:var(--blue); }
+.diag .dp { color:var(--purple); }
+.diag .dr { color:var(--red); }
+.diag .dw { color:var(--text); }
+
+/* ═══ STACK VISUAL ═══ */
+.stack { margin:20px 0; }
+.stack-item {
+  border:1px solid; border-radius:7px;
+  padding:11px 18px; margin-bottom:6px;
+  text-align:center; font-family:var(--mono);
+  font-size:13px; font-weight:600;
+  transition: transform .15s;
+}
+.stack-item:hover { transform: translateX(4px); }
+.si-gold { border-color:rgba(245,166,35,.5); color:var(--gold); background:rgba(245,166,35,.07); }
+.si-teal { border-color:rgba(62,207,142,.5); color:var(--teal); background:rgba(62,207,142,.07); }
+.si-blue { border-color:rgba(110,168,254,.5); color:var(--blue); background:rgba(110,168,254,.07); }
+.si-purple { border-color:rgba(196,181,253,.5); color:var(--purple); background:rgba(196,181,253,.07); }
+.stack-lbl { font-family:var(--mono); font-size:10px; color:var(--text3); text-align:center; margin:4px 0; }
+.stack-arrow { text-align:center; color:var(--text3); font-size:14px; margin-bottom:4px; }
+
+/* ═══ TABLE ═══ */
+table { width:100%; border-collapse:collapse; margin:20px 0; font-size:14px; }
+th {
+  background:var(--surface2); font-family:var(--mono);
+  font-size:10px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--gold); padding:12px 16px; text-align:left;
+  border-bottom:2px solid var(--border);
+}
+td { padding:11px 16px; border-bottom:1px solid var(--border2); color:var(--text2); vertical-align:top; }
+tr:hover td { background:var(--surface2); color:var(--text); }
+tr:last-child td { border-bottom:none; }
+
+/* ═══ GRID CARDS ═══ */
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:20px 0; }
+.grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:13px; margin:20px 0; }
+.card {
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:9px; padding:17px 19px;
+  transition: border-color .2s;
+}
+.card:hover { border-color: var(--gold); }
+.card-lbl { font-family:var(--mono); font-size:9.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--text3); margin-bottom:7px; }
+.card-val { font-size:14px; color:var(--text); line-height:1.55; }
+.card-title { font-family:var(--sans); font-size:14px; font-weight:700; color:var(--gold); margin-bottom:8px; }
+
+/* ═══ PILLS ═══ */
+.pills { display:flex; flex-wrap:wrap; gap:8px; margin:14px 0; }
+.pill { font-family:var(--mono); font-size:11px; padding:4px 12px; border-radius:20px; font-weight:500; }
+.pg { background:rgba(245,166,35,.12); color:var(--gold); border:1px solid rgba(245,166,35,.25); }
+.pt { background:rgba(62,207,142,.1); color:var(--teal); border:1px solid rgba(62,207,142,.2); }
+.pr { background:rgba(224,92,92,.1); color:var(--red); border:1px solid rgba(224,92,92,.2); }
+.pb { background:rgba(110,168,254,.1); color:var(--blue); border:1px solid rgba(110,168,254,.2); }
+.pp { background:rgba(196,181,253,.1); color:var(--purple); border:1px solid rgba(196,181,253,.2); }
+
+/* ═══ PHASE BOXES ═══ */
+.phases { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:20px 0; }
+.phase { background:var(--surface2); border-radius:10px; padding:20px; border:1px solid var(--border); }
+.phase-title { font-family:var(--sans); font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--gold); margin-bottom:10px; }
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:900px){
+  #sidebar { display:none; }
+  #main { margin-left:0; padding:20px 20px 80px; }
+  #prog-bar { left:0; }
+  .grid2,.grid3,.phases { grid-template-columns:1fr; }
+}
+
+/* ═══ ANIM ═══ */
+.lecture { animation: fadeUp .4s ease both; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+</style>
+</head>
+<body>
+
+<div id="prog-bar"><div id="prog-fill"></div></div>
+
+<!-- ████ SIDEBAR ████ -->
+<nav id="sidebar">
+  <div class="sb-head">
+    <div class="sb-eyebrow">Namaste JS · Season 1 · All 19 Episodes</div>
+    <div class="sb-title">The Complete<br><span>JS Bible</span></div>
+  </div>
+  <div class="sb-search"><input id="srch" type="text" placeholder="search any topic…" autocomplete="off"></div>
+  <div class="sb-nav">
+    <div class="nav-section">Foundations</div>
+    <a class="nav-link" href="#lec1"><span class="nav-num">01</span>Execution Context</a>
+    <a class="nav-link" href="#lec2"><span class="nav-num">02</span>How JS Code Runs</a>
+    <a class="nav-link" href="#lec3"><span class="nav-num">03</span>Hoisting</a>
+    <a class="nav-link" href="#lec4"><span class="nav-num">04</span>Functions & Variable Env.</a>
+    <a class="nav-link" href="#lec5"><span class="nav-num">05</span>Shortest JS Program</a>
+    <a class="nav-link" href="#lec6"><span class="nav-num">06</span>undefined vs not defined</a>
+    <a class="nav-link" href="#lec7"><span class="nav-num">07</span>Scope Chain & Lexical Env.</a>
+    <div class="nav-section">ES6 & Variables</div>
+    <a class="nav-link" href="#lec8"><span class="nav-num">08</span>let, const & TDZ</a>
+    <a class="nav-link" href="#lec9"><span class="nav-num">09</span>Block Scope & Shadowing</a>
+    <div class="nav-section">Closures</div>
+    <a class="nav-link" href="#lec10"><span class="nav-num">10</span>Closures — Introduction</a>
+    <a class="nav-link" href="#lec11"><span class="nav-num">11</span>setTimeout + Closures</a>
+    <a class="nav-link" href="#lec12"><span class="nav-num">12</span>Closure Interview Deep Dive</a>
+    <div class="nav-section">Functions</div>
+    <a class="nav-link" href="#lec13"><span class="nav-num">13</span>First-Class Functions</a>
+    <div class="nav-section">Async JavaScript</div>
+    <a class="nav-link" href="#lec14"><span class="nav-num">14</span>Callback Functions</a>
+    <a class="nav-link" href="#lec15"><span class="nav-num">15</span>Event Loop</a>
+    <a class="nav-link" href="#lec16"><span class="nav-num">16</span>JS Engine & Runtime</a>
+    <a class="nav-link" href="#lec17"><span class="nav-num">17</span>Trust Issues with setTimeout</a>
+    <div class="nav-section">Functional Programming</div>
+    <a class="nav-link" href="#lec18"><span class="nav-num">18</span>Higher-Order Functions</a>
+    <a class="nav-link" href="#lec19"><span class="nav-num">19</span>map · filter · reduce</a>
+  </div>
+</nav>
+
+<!-- ████ MAIN ████ -->
+<main id="main">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-ey">Namaste JavaScript · Season 1 · Complete Notes</div>
+  <h1 class="hero-h1">Your Complete<br><em>JavaScript Bible</em></h1>
+  <p class="hero-sub">Every concept Akshay Saini teaches — his analogies, his warnings, his interview tips — nothing cut, nothing diluted. The one file to rule them all.</p>
+  <div class="hero-tags">
+    <span class="htag">Execution Context</span><span class="htag">Hoisting</span>
+    <span class="htag">Scope Chain</span><span class="htag">Closures</span>
+    <span class="htag">Call Stack</span><span class="htag">let · const · var</span>
+    <span class="htag">TDZ</span><span class="htag">Event Loop</span>
+    <span class="htag">Callbacks</span><span class="htag">map · filter · reduce</span>
+    <span class="htag">V8 Engine</span><span class="htag">First-Class Functions</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     EP 01 — EXECUTION CONTEXT
+═══════════════════════════════════════ -->
+<section class="lecture" id="lec1">
+<div class="lec-hd">
+  <div class="lec-badge">EP 01</div>
+  <div>
+    <div class="lec-title">Execution Context in JavaScript</div>
+    <div class="lec-sub">The fundamental container where all JS happens</div>
+  </div>
+</div>
+
+<div class="box gold-box">
+  <div class="box-label">🔑 Core Fundamental — Tattoo This On Your Brain</div>
+  <strong>"Everything in JavaScript happens inside the Execution Context."</strong> — Akshay repeats this twice on purpose. It is the single most important sentence in all of JS.
+</div>
+
+<h3>What is an Execution Context?</h3>
+<p>Think of the Execution Context as a <strong>big box or container</strong> inside which all JavaScript code is executed. It has exactly <strong>two components</strong>:</p>
+
+<div class="grid2">
+  <div class="card">
+    <div class="card-title">Memory Component</div>
+    <div class="card-lbl">Also called → Variable Environment</div>
+    <div class="card-val">All variables and functions are stored here as <strong>key-value pairs</strong> before a single line of code runs.<br><br>Example: <code>{ a: undefined, fn: &lt;code&gt; }</code></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Code Component</div>
+    <div class="card-lbl">Also called → Thread of Execution</div>
+    <div class="card-val">This is the thread in which the <strong>whole code is executed one line at a time</strong>. Nothing happens outside of this.</div>
+  </div>
+</div>
+
+<div class="diag"><span class="dg">┌──────────────────────────────────────────────────────┐
+│                  EXECUTION CONTEXT                   │
+│                                                      │
+│  ┌───────────────────────┐  ┌──────────────────────┐ │
+│  │   MEMORY COMPONENT    │  │   CODE COMPONENT     │ │
+│  │  (Variable Env.)      │  │ (Thread of Execution)│ │
+│  │                       │  │                      │ │
+│  │  key    →  value      │  │  line 1 executes ──► │ │
+│  │  a      →  undefined  │  │  line 2 executes ──► │ │
+│  │  greet  →  { fn code} │  │  line 3 executes ──► │ │
+│  │                       │  │       ...            │ │
+│  └───────────────────────┘  └──────────────────────┘ │
+└──────────────────────────────────────────────────────┘</span></div>
+
+<h3>Is JavaScript Synchronous or Asynchronous?</h3>
+<div class="box gold-box">
+  <div class="box-label">Core Fundamental</div>
+  <strong>JavaScript is a synchronous, single-threaded language.</strong>
+</div>
+<ul>
+  <li><strong>Single-threaded</strong> — JS can only execute one command at a time.</li>
+  <li><strong>Synchronous</strong> — It executes in a specific order. It cannot move to the next line until the current line has finished. No jumping ahead.</li>
+</ul>
+<div class="box blue-box">
+  <div class="box-label">Wait — what about AJAX (Asynchronous)?</div>
+  You've heard of AJAX where 'A' stands for Asynchronous. Don't panic. JavaScript achieves async behaviour through browser APIs, the Event Loop, and the Callback Queue. The JS engine itself is always synchronous. We'll cover all that in depth in Episode 15.
+</div>
+
+<div class="pills">
+  <span class="pill pg">Execution Context</span>
+  <span class="pill pt">Variable Environment</span>
+  <span class="pill pb">Thread of Execution</span>
+  <span class="pill pr">Synchronous</span>
+  <span class="pill pt">Single-threaded</span>
+</div>
+</section>
+
+<hr class="div">
+
+<!-- ═══════════════════════════════════════
+     EP 02 — HOW JS CODE RUNS
+═══════════════════════════════════════ -->
+<section class="lecture" id="lec2">
+<div class="lec-hd">
+  <div class="lec-badge">EP 02</div>
+  <div>
+    <div class="lec-title">How JavaScript Code Is Executed</div>
+    <div class="lec-sub">Two-phase process + the beautiful Call Stack</div>
+  </div>
+</div>
+
+<p>When you run any JS program the <strong>very first thing</strong> that happens is: a <strong>Global Execution Context (GEC)</strong> is created. It always comes first. No exceptions.</p>
+
+<h3>The Example Code</h3>
+<pre data-lang="js"><code><span class="kw">var</span> <span class="vr">n</span> = <span class="num">2</span>;
+
+<span class="kw">function</span> <span class="fn">square</span>(<span class="vr">num</span>) {
+  <span class="kw">var</span> <span class="vr">ans</span> = <span class="vr">num</span> * <span class="vr">num</span>;
+  <span class="kw">return</span> <span class="vr">ans</span>;
+}
+
+<span class="kw">var</span> <span class="vr">square2</span> = <span class="fn">square</span>(<span class="vr">n</span>);   <span class="cmt">// invoke with n=2</span>
+<span class="kw">var</span> <span class="vr">square4</span> = <span class="fn">square</span>(<span class="num">4</span>);  <span class="cmt">// invoke with literal 4</span></code></pre>
+
+<h3>The Two Phases of Execution Context Creation</h3>
+<div class="phases">
+  <div class="phase">
+    <div class="phase-title">Phase 1 — Memory Creation</div>
+    <p>JS skims the <em>entire program</em> before executing even line 1. It allocates memory to all variables and functions.</p>
+    <ul>
+      <li>Variables → stored as <code>undefined</code> (a placeholder)</li>
+      <li>Functions → the <strong>entire code</strong> is literally copied into memory</li>
+    </ul>
+  </div>
+  <div class="phase">
+    <div class="phase-title">Phase 2 — Code Execution</div>
+    <p>JS runs through the code again, line by line. This is where real values replace <code>undefined</code>, calculations happen, and functions are invoked.</p>
+  </div>
+</div>
+
+<h3>Phase 1 Walkthrough — Memory Allocation</h3>
+<div class="diag"><span class="dg">GLOBAL EXECUTION CONTEXT — Phase 1 (Memory)
+</span><span class="db">┌──────────────────────────────────────────────┐
+│  MEMORY                                      │
+│                                              │
+│  n       ──►  </span><span class="dr">undefined             </span><span class="db">           │
+│  square  ──►  </span><span class="dt">{ var ans = num*num; return ans; }</span><span class="db">│
+│  square2 ──►  </span><span class="dr">undefined             </span><span class="db">           │
+│  square4 ──►  </span><span class="dr">undefined             </span><span class="db">           │
+└──────────────────────────────────────────────┘</span></div>
+
+<h3>Phase 2 Walkthrough — Code Execution</h3>
+<p><strong>Line 1:</strong> <code>n = 2</code> → the <code>undefined</code> placeholder in memory is replaced with <code>2</code>.</p>
+<p><strong>Lines 2–5:</strong> Function declaration — nothing to execute here, already stored in memory during Phase 1.</p>
+<p><strong>Line 6:</strong> <code>square(n)</code> is invoked. This is where it gets interesting.</p>
+
+<div class="box gold-box">
+  <div class="box-label">🔑 Key Insight</div>
+  <strong>Every single time a function is invoked, a brand-new Execution Context is created for it inside the Global Execution Context.</strong> Functions in JS are like mini-programs. Each invocation creates its own isolated world with its own memory and code components.
+</div>
+
+<h4>Inside square(n) — a new Execution Context is born:</h4>
+<div class="diag"><span class="dt">square(n) Execution Context
+</span><span class="db">┌────────────────────────────────────────┐
+│  Phase 1 (Memory):                     │
+│    num  ──►  </span><span class="dr">undefined</span><span class="db">                   │
+│    ans  ──►  </span><span class="dr">undefined</span><span class="db">                   │
+│                                        │
+│  Phase 2 (Code):                       │
+│    num  ◄──  2    (argument passed)    │
+│    ans  ◄──  2 × 2 = 4                 │
+│    </span><span class="kw">return</span><span class="db"> ans  ──►  4 goes to square2   │
+└────────────────────────────────────────┘</span>
+<span class="dp">↓ Execution Context is DELETED after return</span>
+<span class="dg">square2 = 4 ✓   Control returns to line 6</span></div>
+
+<p>Then <code>square(4)</code> creates another new EC, computes <code>16</code>, assigns to <code>square4</code>, and that EC is deleted. When the whole program finishes, the GEC is also deleted.</p>
+
+<h3>The Call Stack — JS's Traffic Controller</h3>
+<div class="akquote">It is very difficult for the JS engine to manage all this execution context creation and deletion. But it does it very beautifully — using the Call Stack.</div>
+
+<p>The Call Stack is a <strong>stack data structure</strong> (Last In, First Out — LIFO) that tracks which Execution Context is currently running.</p>
+
+<div class="stack">
+  <div class="stack-lbl">During square(n) execution:</div>
+  <div class="stack-item si-teal">E1 — square(n) execution context ← currently running (TOP)</div>
+  <div class="stack-arrow">▲ pushed when square(n) was called</div>
+  <div class="stack-item si-gold">GEC — Global Execution Context ← always at the bottom</div>
+  <br>
+  <div class="stack-lbl" style="color:var(--text2); font-size:12px;">When square(n) returns → E1 is POPPED. Control back to GEC at line 6.</div>
+</div>
+
+<div class="box teal-box">
+  <div class="box-label">Other Names for the Call Stack</div>
+  That's why JS is the most confusing language — everything has fancy names. Call Stack = <em>Execution Context Stack = Program Stack = Control Stack = Runtime Stack = Machine Stack</em>. All the same beautiful thing.
+</div>
+
+<div class="itip">
+  <p>The Call Stack <strong>maintains the order of execution of Execution Contexts</strong>. When asked "what is the call stack?" — explain this mechanism: GEC pushed first, function ECs pushed on top when invoked, popped when returned, GEC popped when program ends.</p>
+</div>
+
+<div class="pills">
+  <span class="pill pg">Global Execution Context</span>
+  <span class="pill pt">Memory Creation Phase</span>
+  <span class="pill pb">Code Execution Phase</span>
+  <span class="pill pr">Call Stack</span>
+  <span class="pill pt">LIFO</span>
+</div>
+</section>
+
+<hr class="div">
+
+<!-- ═══════════════════════════════════════
+     EP 03 — HOISTING
+═══════════════════════════════════════ -->
+<section class="lecture" id="lec3">
+<div class="lec-hd">
+  <div class="lec-badge">EP 03</div>
+  <div>
+    <div class="lec-title">Hoisting in JavaScript</div>
+    <div class="lec-sub">Accessing variables and functions before they're declared — the magic explained</div>
+  </div>
+</div>
+
+<div class="box gold-box">
+  <div class="box-label">Definition</div>
+  <strong>Hoisting</strong> is a phenomenon in JavaScript by which you can access variables and functions <em>even before you have initialized them</em> — without getting an error.
+</div>
+
+<h3>The Magic Demo</h3>
+<pre data-lang="js"><code><span class="cmt">// These lines are BEFORE the declarations — and they work!</span>
+<span class="fn">getName</span>();          <span class="cmt">// → "Namaste JavaScript" ✓</span>
+console.log(<span class="vr">x</span>);    <span class="cmt">// → undefined  (not an error!)</span>
+console.log(<span class="fn">getName</span>); <span class="cmt">// → prints the entire function code</span>
+
+<span class="kw">var</span> <span class="vr">x</span> = <span class="num">7</span>;
+<span class="kw">function</span> <span class="fn">getName</span>() {
+  console.log(<span class="str">"Namaste JavaScript"</span>);
+}</code></pre>
+
+<p>In other languages this would be an error. In JS it works because of <strong>Phase 1</strong> — memory was already allocated for <code>x</code> (<code>undefined</code>) and the full code of <code>getName</code> was already copied into memory before line 1 even executed.</p>
+
+<h3>undefined vs "not defined" — They Are NOT the Same</h3>
+<table>
+  <tr><th>Term</th><th>What it means</th><th>When you see it</th></tr>
+  <tr><td><code>undefined</code></td><td>Memory was allocated, but no value assigned yet. It IS in memory.</td><td>var declared but not yet assigned</td></tr>
+  <tr><td><code>not defined</code> (ReferenceError)</td><td>No memory was allocated. The identifier doesn't exist anywhere.</td><td>Variable never declared in the program</td></tr>
+</table>
+
+<pre data-lang="js"><code><span class="cmt">// Remove "var x = 7" entirely from the program:</span>
+console.log(<span class="vr">x</span>);  <span class="cmt">// ReferenceError: x is not defined</span>
+<span class="cmt">// Because now x was NEVER in memory at all</span></code></pre>
+
+<h3>How Different Function Syntaxes Hoist</h3>
+<table>
+  <tr><th>Syntax</th><th>Hoisted as</th><th>Can call before declaration?</th></tr>
+  <tr><td>Function Declaration<br><code>function foo() {}</code></td><td>Full function code ✓</td><td>Yes ✓</td></tr>
+  <tr><td>Function Expression<br><code>var foo = function() {}</code></td><td><code>undefined</code></td><td>No — TypeError ✗</td></tr>
+  <tr><td>Arrow Function<br><code>var foo = () => {}</code></td><td><code>undefined</code></td><td>No — TypeError ✗</td></tr>
+</table>
+
+<div class="akquote">Arrow functions and function expressions behave just like another variable. So if you call them before their line, JS sees <code>undefined</code> and says "you're trying to call <code>undefined</code> as a function?" — TypeError.</div>
+
+<div class="itip">
+  <p><strong>Don't say:</strong> "Hoisting moves code to the top of the file."<br>
+  <strong>Say this:</strong> "Hoisting happens because of the Memory Creation Phase (Phase 1) of the Execution Context. Before any code executes, JS allocates memory to all variables (storing <code>undefined</code>) and copies the entire code of function declarations. That's why we can access them before their line in the source code."</p>
+</div>
+
+<div class="pills">
+  <span class="pill pg">Hoisting</span><span class="pill pr">undefined</span>
+  <span class="pill pr">ReferenceError</span><span class="pill pt">TypeError</span>
+  <span class="pill pb">Function Declaration</span>
+</div>
+</section>
+
+<hr class="div">
+
+<!-- ═══════════════════════════════════════
+     EP 04 — FUNCTIONS & VARIABLE ENV
+═══════════════════════════════════════ -->
+<section class="lecture" id="lec4">
+<div class="lec-hd">
+  <div class="lec-badge">EP 04</div>
+  <div>
+    <div class="lec-title">Functions & Variable Environments</div>
+    <div class="lec-sub">Each invocation = its own isolated world. Demonstrated in DevTools.</div>
+  </div>
+</div>
+
+<p>This episode shows — live in the browser debugger — that every function invocation creates its own execution context with its own completely isolated variable environment.</p>
+
+<h3>Variable Environment Isolation</h3>
+<pre data-lang="js"><code><span class="kw">var</span> <span class="vr">x</span> = <span class="num">1</span>;
+
+<span class="kw">function</span> <span class="fn">a</span>() {
+  <span class="kw">var</span> <span class="vr">x</span> = <span class="num">10</span>;  <span class="cmt">// local x — completely separate from global x</span>
+  console.log(<span class="vr">x</span>); <span class="cmt">// 10</span>
+}
+
+<span class="kw">function</span> <span class="fn">b</span>() {
+  <span class="kw">var</span> <span class="vr">x</span> = <span class="num">100</span>;
+  console.log(<span class="vr">x</span>); <span class="cmt">// 100</span>
+}
+
+<span class="fn">a</span>();
+<span class="fn">b</span>();
+console.log(<span class="vr">x</span>); <span class="cmt">// 1 — global x untouched</span></code></pre>
+
+<div class="diag"><span class="dg">Call Stack during a() execution:
+</span><span class="dt">┌──────────────────────────────────┐
+│  a()'s EC  →  x: 10              │  ← TOP
+└──────────────────────────────────┘</span>
+<span class="dg">┌──────────────────────────────────┐
+│  GEC       →  x: 1, a: fn, b: fn │  ← BOTTOM
+└──────────────────────────────────┘</span>
+<span class="dp">x inside a() is COMPLETELY different from x in GEC</span></div>
+
+<h3>Seeing It Live — DevTools Demo</h3>
+<p>Put a <code>debugger;</code> statement inside a function. In Chrome DevTools → Sources panel → when execution pauses, look at the <strong>Call Stack panel</strong> on the right. You'll see:</p>
+<ul>
+  <li><code>anonymous</code> = the Global Execution Context (always at the bottom)</li>
+  <li>Function name = pushed on top when the function runs</li>
+  <li>When the function returns → it disappears (popped off)</li>
+  <li>Once everything is done → Call Stack is empty</li>
+</ul>
+
+<div class="box teal-box">
+  <div class="box-label">Pro tip</div>
+  Open DevTools → Sources → add <code>debugger;</code> in your code → refresh. Step through with F10. Watch variables change in the Scope panel. This is the execution context made <em>visible</em>.
+</div>
+</section>
+
+<hr class="div">
+
+<!-- ═══════════════════════════════════════
+     EP 05 — SHORTEST JS PROGRAM
+═══════════════════════════════════════ -->
+<section class="lecture" id="lec5">
+<div class="lec-hd">
+  <div class="lec-badge">EP 05</div>
+  <div>
+    <div class="lec-title">The Shortest JS Program — window & this</div>
+    <div class="lec-sub">What happens when you run a completely empty JS file?</div>
+  </div>
+</div>
+
+<p>The shortest JavaScript program is an <strong>empty file</strong>. Even with zero lines of code, when the JS engine runs it: a Global Execution Context is created AND a <strong>global object</strong> is created.</p>
+
+<div class="box gold-box">
+  <div class="box-label">Key Concept</div>
+  Along with the GEC, the JS engine always creates a <strong>global object</strong>. In browsers it's called <code>window</code>. In Node.js it's called <code>global</code>. The name changes by environment — but there is <em>always</em> a global object. This is a responsibility of the JS engine itself.
+</div>
+
+<h3>window, this, and the Global Object</h3>
+<pre data-lang="js"><code><span class="cmt">// In browser — even in an empty file:</span>
+console.log(<span class="vr">window</span>);  <span class="cmt">// → Window { ... } — the global object</span>
+console.log(<span class="kw">this</span>);    <span class="cmt">// → Window { ... } — same thing at global level</span>
+
+<span class="kw">this</span> === <span class="vr">window</span>;      <span class="cmt">// → true</span></code></pre>
+
+<h3>Global Variables Attach to window</h3>
+<p>Any <code>var</code> variable or function declaration in the global space (not inside any function) gets attached to the <code>window</code> object automatically.</p>
+<pre data-lang="js"><code><span class="kw">var</span> <span class="vr">a</span> = <span class="num">10</span>;
+<span class="kw">function</span> <span class="fn">greet</span>() { console.log(<span class="str">"hi"</span>); }
+
+<span class="vr">window</span>.<span class="vr">a</span>;      <span class="cmt">// 10 — attached!</span>
+<span class="vr">window</span>.<span class="fn">greet</span>;  <span class="cmt">// ƒ greet() — attached!</span>
+
+<span class="cmt">// You can even access without window. prefix:</span>
+<span class="vr">a</span>;        <span class="cmt">// 10</span>
+<span class="fn">greet</span>();  <span class="cmt">// "hi"</span></code></pre>
+
+<div class="box blue-box">
+  <div class="box-label">Why this matters later</div>
+  Understanding that global <code>var</code>s become properties of <code>window</code> is critical for understanding global namespace pollution, and why <code>let</code>/<code>const</code> (which do NOT attach to window) are preferable in modern code.
+</div>
+
+<div class="pills">
+  <span class="pill pg">window object</span><span class="pill pt">this keyword</span>
+  <span class="pill pb">Global Object</span><span class="pill pr">Global Space</span>
+</div>
+</section>
+
+<hr class="div">
+
+<!-- ═══════════════════════════════════════
+     EP 06 — UNDEFINED VS NOT DEFINED
+═══════════════════════════════════════ -->
+<section class="lecture" id="lec6">
+<div class="lec-hd">
+  <div class="lec-badge">EP 06</div>
+  <div>
+    <div class="lec-title">undefined vs not defined</div>
+    <div class="lec-sub">A very special keyword unique to JavaScript — and a mistake you must never make</div>
+  </div>
+</div>
+
+<div class="box gold-box">
+  <div class="box-label">Core Concept</div>
+  <code>undefined</code> is NOT the absence of a value. It is a <strong>real keyword</strong> that takes up memory space. It's the placeholder JS deliberately puts into a variable's memory slot during Phase 1, before any value is assigned.
+</div>
+
+<h3>The Lifecycle of a Variable</h3>
+<pre data-lang="js"><code><span class="cmt">// Phase 1 allocates memory for 'a' → placeholder: undefined
+// Phase 2 executes line by line</span>
+
+console.log(<span class="vr">a</span>);  <span class="cmt">// undefined — memory exists, value not yet</span>
+<span class="kw">var</span> <span class="vr">a</span> = <span class="num">7</span>;
+console.log(<span class="vr">a</span>);  <span class="cmt">// 7 — placeholder replaced with actual value</span></code></pre>
+
+<h3>undefined ≠ Empty</h3>
+<p><code>undefined</code> is not empty. It is a concrete value — a special keyword — that JS puts in a slot to say: "memory is reserved, but nothing has been assigned yet." You can even check for it:</p>
+<pre data-lang="js"><code><span class="kw">var</span> <span class="vr">a</span>;
+<span class="kw">if</span> (<span class="vr">a</span> === <span class="kw">undefined</span>) {
+  console.log(<span class="str">"a is undefined"</span>); <span class="cmt">// runs</span>
+}
+<span class="vr">a</span> = <span class="num">10</span>;
+<span class="kw">if</span> (<span class="vr">a</span> === <span class="kw">undefined</span>) {
+  console.log(<span class="str">"a is undefined"</span>);
+} <span class="kw">else</span> {
+  console.log(<span class="str">"a is not undefined"</span>); <span class="cmt">// runs now</span>
+}</code></pre>
+
+<h3>JavaScript is a Loosely Typed Language</h3>
+<p>Also called a <strong>weakly typed</strong> language. JS doesn't bind variables to a specific data type — you can reassign freely from string to number to boolean. This is not a weakness:</p>
+<div class="akquote">JavaScript is not weak at all. In fact I feel the language is more stronger — because it is handling a lot of stuff behind the scenes. You give it a string, it handles automatically. You give it a number, it takes it. That's flexibility, not weakness.</div>
+
+<pre data-lang="js"><code><span class="kw">var</span> <span class="vr">a</span>;              <span class="cmt">// undefined</span>
+<span class="vr">a</span> = <span class="num">10</span>;            <span class="cmt">// number — fine</span>
+<span class="vr">a</span> = <span class="str">"hello"</span>;      <span class="cmt">// string — also fine!</span>
+<span class="vr">a</span> = <span class="kw">true</span>;          <span class="cmt">// boolean — perfectly valid JS</span></code></pre>
+
+<div class="box red-box">
+  <div class="box-label">⚠️ Never Do This Mistake</div>
+  <strong>Never manually assign <code>undefined</code> to a variable:</strong> <code>var a = undefined;</code><br><br>
+  <code>undefined</code> is a sentinel value JS uses to communicate "not yet assigned." Polluting that signal leads to confusing bugs. If you want to empty a variable, use <code>null</code>. Let <code>undefined</code> serve its original purpose.
+</div>
+
+<div class="pills">
+  <span class="pill pg">undefined</span><span class="pill pr">not defined</span>
+  <span class="pill pt">loosely typed</span><span class="pill pb">weakly typed</span>
+</div>
+</section>
+
+<hr class="div">
+
+<!-- ═══════════════════════════════════════
+     EP 07 — SCOPE CHAIN & LEXICAL ENV
+═══════════════════════════════════════ -->
+<section class="lecture" id="lec7">
+<div class="lec-hd">
+  <div class="lec-badge">EP 07</div>
+  <div>
+    <div class="lec-title">Scope Chain & Lexical Environment</div>
+    <div class="lec-sub">How JavaScript finds variables — the chain of nested environments</div>
+  </div>
+</div>
+
+<div class="box gold-box">
+  <div class="box-label">Core Fundamental</div>
+  <strong>Scope in JavaScript is directly related to the Lexical Environment.</strong>
+</div>
+
+<h3>What is Scope?</h3>
+<p>Scope answers two related questions:</p>
+<ul>
+  <li>"<em>Where</em> can I access this variable?" — this is the <strong>scope of the variable</strong></li>
+  <li>"Is this variable accessible from <em>here</em>?" — is it <strong>inside the scope</strong>?</li>
+</ul>
+
+<h3>The Code Example</h3>
+<pre data-lang="js"><code><span class="kw">function</span> <span class="fn">a</span>() {
+  <span class="kw">function</span> <span class="fn">c</span>() {
+    console.log(<span class="vr">b</span>); <span class="cmt">// 10 — can access b from outer scope!</span>
+  }
+  <span class="kw">var</span> <span class="vr">b</span> = <span class="num">10</span>;
+  <span class="fn">c</span>();
+}
+<span class="fn">a</span>();
+
+console.log(<span class="vr">b</span>); <span class="cmt">// ReferenceError: b is not defined</span>
+<span class="cmt">// b is not accessible in global scope</span></code></pre>
+
+<h3>What is Lexical Environment?</h3>
+<div class="box gold-box">
+  <div class="box-label">Definition — Remember This Forever</div>
+  <strong>Lexical Environment = Local Memory + Reference to the Lexical Environment of its Parent.</strong><br><br>
+  "Lexical" means <em>in order, in hierarchy, by physical location in the source code</em>. Where a function sits in the code determines its lexical parent.
+</div>
+
+<p>In the example: <code>c</code> is physically inside <code>a</code> → <code>c</code>'s lexical parent is <code>a</code>. <code>a</code> is physically inside global → <code>a</code>'s lexical parent is global. Global's parent → <code>null</code>.</p>
+
+<div class="diag"><span class="dg">GLOBAL EXECUTION CONTEXT
+</span><span class="db">┌──────────────────────────────────────────────────────────┐
+│  Memory: { a: fn }                                       │
+│  Lexical Parent Reference: </span><span class="dr">null</span><span class="db">                           │
+│                                                          │
+│  </span><span class="dt">A's EXECUTION CONTEXT</span><span class="db">                                     │
+│  ┌────────────────────────────────────────────────────┐  │
+│  │  Memory: { b: 10, c: fn }                          │  │
+│  │  Lexical Parent Reference: ──────────────────► GEC │  │
+│  │                                                    │  │
+│  │  </span><span class="dp">C's EXECUTION CONTEXT</span><span class="db">                             │  │
+│  │  ┌──────────────────────────────────────────────┐  │  │
+│  │  │  Memory: {}                                  │  │  │
+│  │  │  Lexical Parent Reference: ────────────► A   │  │  │
+│  │  └──────────────────────────────────────────────┘  │  │
+│  └────────────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────┘</span></div>
+
+<h3>How JS Searches for a Variable</h3>
+<p>When <code>c</code> does <code>console.log(b)</code>:</p>
+<ol>
+  <li>JS checks <code>c</code>'s local memory → <code>b</code> not found</li>
+  <li>Follows lexical parent reference → goes to <code>a</code>'s memory → found! Returns <code>10</code></li>
+</ol>
+<p>If <code>b</code> wasn't in <code>a</code>'s memory either:</p>
+<ol start="3">
+  <li>Goes to <code>a</code>'s parent → Global memory → searches there</li>
+  <li>Still not found → Global's parent → <code>null</code> → search ends</li>
+  <li>Throws: <code>ReferenceError: b is not defined</code></li>
+</ol>
+
+<h3>The Scope Chain</h3>
+<div class="box teal-box">
+  <div class="box-label">Definition</div>
+  The <strong>Scope Chain</strong> is this entire chain of lexical environments — local → parent → grandparent → … → null. It determines what is and isn't accessible from any given point in your code. The chain of all these lexical environment references is the scope chain.
+</div>
+
+<div class="box blue-box">
+  <div class="box-label">Sneak Peek at Closures</div>
+  In DevTools, when paused at a breakpoint inside <code>c</code>, you'll see a <strong>Closure</strong> entry in the Scope panel containing <code>b</code> from <code>a</code>. This is closure! <code>c</code> has enclosed <code>a</code>'s variables in its scope. We cover this fully in Episode 10.
+</div>
+
+<div class="pills">
+  <span class="pill pg">Scope</span><span class="pill pt">Lexical Environment</span>
+  <span class="pill pb">Scope Chain</span><span class="pill pr">Lexical Parent</span>
+</div>
+</section>
+
+<hr class="div">
+
+<!-- ═══════════════════════════════════════
+     EP 08 — LET, CONST & TDZ
+═══════════════════════════════════════ -->
+<section class="lecture" id="lec8">
+<div class="lec-hd">
+  <div class="lec-badge">EP 08</div>
+  <div>
+    <div class="lec-title">let, const & Temporal Dead Zone</div>
+    <div class="lec-sub">ES6 variables and why they behave very differently from var</div>
+  </div>
+</div>
+
+<div class="box gold-box">
+  <div class="box-label">Key Insight — Yes, let and const ARE Hoisted</div>
+  <code>let</code> and <code>const</code> are hoisted — memory IS allocated for them in Phase 1. BUT they are stored in a <em>separate memory space</em> (not on the global object), and they <strong>cannot be accessed</strong> before the line where they are declared. This period of inaccessibility is the <strong>Temporal Dead Zone (TDZ)</strong>.
+</div>
+
+<h3>The Temporal Dead Zone Explained</h3>
+<div class="diag"><span class="dg">Timeline for:  let b = 20;
+</span><span class="db">  Program start
+       │
+       ▼
+  </span><span class="dt">[Phase 1: Memory allocated for b — in SEPARATE SPACE, not window]</span><span class="db">
+       │
+       │   ◄────────────── </span><span class="dr">TEMPORAL DEAD ZONE</span><span class="db"> ──────────────►
+       │          b exists in memory BUT is inaccessible
+       │          Accessing b here → ReferenceError
+       │
+       ▼
+  </span><span class="dg">let b = 20;   ← TDZ ENDS here. b is now accessible with value 20</span><span class="db">
+       │
+       ▼
+  console.log(b); // 20 ✓</span></div>
+
+<pre data-lang="js"><code>console.log(<span class="vr">a</span>); <span class="cmt">// undefined — var is accessible (just has placeholder)</span>
+console.log(<span class="vr">b</span>); <span class="cmt">// ReferenceError: Cannot access 'b' before initialization</span>
+
+<span class="kw">var</span> <span class="vr">a</span> = <span class="num">10</span>;
+<span class="kw">let</span> <span class="vr">b</span> = <span class="num">20</span>;  <span class="cmt">// b exits TDZ here</span></code></pre>
+
+<h3>let vs const vs var — Full Comparison</h3>
+<table>
+  <tr><th>Feature</th><th>var</th><th>let</th><th>const</th></tr>
+  <tr><td>Hoisted?</td><td>Yes, as <code>undefined</code></td><td>Yes, but in TDZ</td><td>Yes, but in TDZ</td></tr>
+  <tr><td>Attached to <code>window</code>?</td><td>Yes ✓</td><td>No ✗</td><td>No ✗</td></tr>
+  <tr><td>Re-declaration allowed?</td><td>Yes</td><td>No (SyntaxError)</td><td>No (SyntaxError)</td></tr>
+  <tr><td>Re-assignment allowed?</td><td>Yes</td><td>Yes</td><td>No (TypeError)</td></tr>
+  <tr><td>Must initialize at declaration?</td><td>No</td><td>No</td><td>Yes</td></tr>
+  <tr><td>Scope</td><td>Function / Global</td><td>Block</td><td>Block</td></tr>
+</table>
+
+<h3>Three Types of Errors with let & const</h3>
+<div class="grid3">
+  <div class="card">
+    <div class="card-title" style="color:var(--red)">SyntaxError</div>
+    <div class="card-lbl">Caught before code runs</div>
+    <div class="card-val">Re-declaring a <code>let</code> variable, or declaring <code>const</code> without initialization.</div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--red)">TypeError</div>
+    <div class="card-lbl">At runtime</div>
+    <div class="card-val">Trying to re-assign a <code>const</code> variable after it's been set.</div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--red)">ReferenceError</div>
+    <div class="card-lbl">At runtime</div>
+    <div class="card-val">Accessing a <code>let</code>/<code>const</code> variable while it's in the Temporal Dead Zone.</div>
+  </div>
+</div>
+
+<pre data-lang="js"><code><span class="cmt">// SyntaxError — caught before any line runs:</span>
+<span class="kw">let</span> <span class="vr">a</span> = <span class="num">10</span>;
+<span class="kw">let</span> <span class="vr">a</span> = <span class="num">20</span>; <span class="cmt">// SyntaxError: Identifier 'a' already declared</span>
+<span class="kw">const</span> <span class="vr">b</span>;   <span class="cmt">// SyntaxError: Missing initializer in const declaration</span>
+
+<span class="cmt">// TypeError — at runtime:</span>
+<span class="kw">const</span> <span class="vr">c</span> = <span class="num">100</span>;
+<span class="vr">c</span> = <span class="num">200</span>;   <span class="cmt">// TypeError: Assignment to constant variable</span>
+
+<span class="cmt">// ReferenceError — TDZ:</span>
+console.log(<span class="vr">d</span>); <span class="cmt">// ReferenceError: Cannot access 'd' before init</span>
+<span class="kw">let</span> <span class="vr">d</span> = <span class="num">10</span>;</code></pre>
+
+<h3>How to Avoid the Temporal Dead Zone</h3>
+<div class="box teal-box">
+  <div class="box-label">Best Practice</div>
+  <strong>Always declare and initialize your variables at the very top of their scope.</strong> This shrinks the TDZ to zero — the moment the declaration line is hit, it's immediately initialized. No gap, no danger.
+</div>
+
+<h3>Which Should You Use?</h3>
+<ul>
+  <li>Use <strong><code>const</code></strong> whenever possible — for values that don't change.</li>
+  <li>Use <strong><code>let</code></strong> when you need to reassign.</li>
+  <li><strong>Avoid <code>var</code></strong> in modern code — no block scope, pollutes <code>window</code>, confusing hoisting.</li>
+</ul>
+
+<div class="itip">
+  <p>"Are <code>let</code> and <code>const</code> hoisted?" → <strong>Yes, they are hoisted, but they're kept in the Temporal Dead Zone</strong> from the start of their scope until the line where they are initialized. Accessing them before that line throws a ReferenceError. Unlike <code>var</code>, they are not stored in the global object — they live in a separate memory space."</p>
+</div>
+
+<div class="pills">
+  <span class="pill pg">Temporal Dead Zone</span><span class="pill pr">SyntaxError</span>
+  <span class="pill pr">TypeError</span><span class="pill pr">ReferenceError</span>
+  <span class="pill pt">Block Scope</span>
+</div>
+</section>
+
+<hr class="div">
+
+<!-- ═══════════════════════════════════════
+     EP 09 — BLOCK SCOPE & SHADOWING
+═══════════════════════════════════════ -->
+<section class="lecture" id="lec9">
+<div class="lec-hd">
+  <div class="lec-badge">EP 09</div>
+  <div>
+    <div class="lec-title">Block Scope & Shadowing in JavaScript</div>
+    <div class="lec-sub">What a block is, how let/const live inside it, and illegal shadowing rules</div>
+  </div>
+</div>
+
+<h3>What is a Block?</h3>
+<div class="box gold-box">
+  <div class="box-label">Definition</div>
+  A <strong>block</strong> (also called a <em>compound statement</em>) is code wrapped in curly braces <code>{ }</code>. It's used to group multiple JS statements together in places where JS expects only <em>one</em> statement (like after <code>if</code>, <code>for</code>, etc.).
+</div>
+
+<pre data-lang="js"><code><span class="cmt">// Block scope in action:</span>
+{
+  <span class="kw">var</span> <span class="vr">a</span> = <span class="num">10</span>;   <span class="cmt">// goes to global/function scope — NOT block-scoped</span>
+  <span class="kw">let</span> <span class="vr">b</span> = <span class="num">20</span>;   <span class="cmt">// block-scoped — only lives inside { }</span>
+  <span class="kw">const</span> <span class="vr">c</span> = <span class="num">30</span>; <span class="cmt">// block-scoped — only lives inside { }</span>
+}
+
+console.log(<span class="vr">a</span>);  <span class="cmt">// 10 ✓ — var leaks out of blocks</span>
+console.log(<span class="vr">b</span>);  <span class="cmt">// ReferenceError — let is gone</span>
+console.log(<span class="vr">c</span>);  <span class="cmt">// ReferenceError — const is gone</span></code></pre>
+
+<p>During Phase 1 for the block, <code>b</code> and <code>c</code> are stored in a <em>separate block-scope memory</em> — not in global. <code>a</code> goes into global memory as always.</p>
+
+<h3>Shadowing</h3>
+<p>When a variable inside a block has the same name as one outside, the inner one <strong>shadows</strong> the outer one within the block. The behaviour differs between <code>var</code> and <code>let</code>:</p>
+
+<div class="grid2">
+  <div class="card">
+    <div class="card-title" style="color:var(--red)">var shadowing — modifies original!</div>
+    <pre style="margin:0;background:transparent;border:none;padding:6px 0;font-size:12px;"><code><span class="kw">var</span> <span class="vr">a</span> = <span class="num">100</span>;
+{
+  <span class="kw">var</span> <span class="vr">a</span> = <span class="num">10</span>; <span class="cmt">// SAME memory location!</span>
+  console.log(<span class="vr">a</span>); <span class="cmt">// 10</span>
+}
+console.log(<span class="vr">a</span>); <span class="cmt">// 10 — global was CHANGED</span></code></pre>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--teal)">let shadowing — safe, separate!</div>
+    <pre style="margin:0;background:transparent;border:none;padding:6px 0;font-size:12px;"><code><span class="kw">let</span> <span class="vr">b</span> = <span class="num">100</span>;
+{
+  <span class="kw">let</span> <span class="vr">b</span> = <span class="num">20</span>; <span class="cmt">// DIFFERENT memory location</span>
+  console.log(<span class="vr">b</span>); <span class="cmt">// 20</span>
+}
+console.log(<span class="vr">b</span>); <span class="cmt">// 100 — outer b untouched ✓</span></code></pre>
+  </div>
+</div>
+
+<h3>Illegal Shadowing</h3>
+<div class="box red-box">
+  <div class="box-label">Rule</div>
+  You <strong>cannot shadow a <code>let</code> variable with <code>var</code></strong> inside a block. But you <em>can</em> shadow a <code>var</code> with <code>let</code>, or <code>let</code> with <code>let</code>.
+</div>
+
+<pre data-lang="js"><code><span class="kw">let</span> <span class="vr">a</span> = <span class="num">10</span>;
+{
+  <span class="kw">var</span> <span class="vr">a</span> = <span class="num">20</span>;  <span class="cmt">// ✗ SyntaxError: 'a' already declared</span>
+  <span class="cmt">// Reason: var tries to go to global scope, but let a is already there</span>
+}
+
+<span class="cmt">// This IS fine:</span>
+<span class="kw">var</span> <span class="vr">b</span> = <span class="num">10</span>;
+{
+  <span class="kw">let</span> <span class="vr">b</span> = <span class="num">20</span>;  <span class="cmt">// ✓ OK — let b lives in block, no conflict</span>
+}</code></pre>
+
+<div class="itip">
+  <p>"What is a block in JavaScript?" → <strong>A block is code enclosed in <code>{ }</code> used to group multiple statements. <code>let</code> and <code>const</code> are block-scoped — they live only inside the block they're declared in. <code>var</code> ignores blocks and goes to the nearest function or global scope.</strong></p>
+</div>
+
+<div class="pills">
+  <span class="pill pg">Block Scope</span><span class="pill pt">Shadowing</span>
+  <span class="pill pr">Illegal Shadowing</span><span class="pill pb">Lexical Scope</span>
+</div>
+</section>
+
+<hr class="div">
+
+<!-- ═══════════════════════════════════════
+     EP 10 — CLOSURES
+═══════════════════════════════════════ -->
+<section class="lecture" id="lec10">
+<div class="lec-hd">
+  <div class="lec-badge">EP 10</div>
+  <div>
+    <div class="lec-title">Closures in JavaScript</div>
+    <div class="lec-sub">The most beautiful and powerful concept in JS</div>
+  </div>
+</div>
+
+<div class="box gold-box">
+  <div class="box-label">🔑 Official Definition</div>
+  <strong>A closure is a function bundled together with its lexical environment.</strong> In other words, a function along with its outer scope — even when that function is executed far outside where it was originally defined.
+</div>
+
+<div class="akquote">Functions are so beautiful that they remember their lexical environment wherever they go. Even when a function is returned from another function and executed in a completely different scope — it still has access to the variables of its original scope. That's the magic of closures.</div>
+
+<h3>Basic Example</h3>
+<pre data-lang="js"><code><span class="kw">function</span> <span class="fn">x</span>() {
+  <span class="kw">var</span> <span class="vr">a</span> = <span class="num">7</span>;
+
+  <span class="kw">function</span> <span class="fn">y</span>() {
+    console.log(<span class="vr">a</span>); <span class="cmt">// can access a — closure!</span>
+  }
+
+  <span class="fn">y</span>();
+}
+<span class="fn">x</span>(); <span class="cmt">// → 7</span></code></pre>
+
+<h3>The Real Power — Functions Returned from Functions</h3>
+<pre data-lang="js"><code><span class="kw">function</span> <span class="fn">x</span>() {
+  <span class="kw">var</span> <span class="vr">a</span> = <span class="num">7</span>;
+
+  <span class="kw">function</span> <span class="fn">y</span>() {
+    console.log(<span class="vr">a</span>);
+  }
+
+  <span class="kw">return</span> <span class="fn">y</span>;  <span class="cmt">// return the function itself (not its result)</span>
+}
+
+<span class="kw">var</span> <span class="vr">z</span> = <span class="fn">x</span>();  <span class="cmt">// x() executes, returns y, x's EC is deleted</span>
+<span class="vr">z</span>();          <span class="cmt">// → 7  ← a still accessible even though x is gone!</span></code></pre>
+
+<div class="box teal-box">
+  <div class="box-label">What just happened?</div>
+  When <code>x()</code> finished executing, its Execution Context was deleted. Yet when we call <code>z()</code> — which is the returned function <code>y</code> — it still prints <code>7</code>. Why? Because <code>y</code> closed over the variable <code>a</code> from its lexical environment. The closure kept that reference alive.
+</div>
+
+<div class="box purple-box">
+  <div class="box-label">Critical — Closures hold REFERENCES, not values</div>
+  <strong>A closure remembers a reference to the variable, not a snapshot of its value at the time of creation.</strong> This distinction is crucial for understanding the famous setTimeout loop bug (covered in Episode 11).
+</div>
+
+<h3>Compact Syntax — How Developers Write Closures</h3>
+<pre data-lang="js"><code><span class="kw">function</span> <span class="fn">x</span>() {
+  <span class="kw">var</span> <span class="vr">a</span> = <span class="num">7</span>;
+  <span class="kw">return</span> <span class="kw">function</span> <span class="fn">y</span>() {  <span class="cmt">// return directly, more concise</span>
+    console.log(<span class="vr">a</span>);
+  }
+}
+<span class="fn">x</span>()();  <span class="cmt">// → 7  (double parentheses — call x, then call the returned fn)</span></code></pre>
+
+<h3>Uses of Closures</h3>
+<ul>
+  <li><strong>Data Hiding & Encapsulation</strong> — private variables (see Episode 12)</li>
+  <li><strong>Module Design Pattern</strong> — currying, partial application</li>
+  <li><strong>setTimeout callbacks</strong> — they remember their outer scope</li>
+  <li><strong>Event listeners</strong> — the handler closes over counter variables etc.</li>
+  <li><strong>memoization</strong> — caching results in a closure</li>
+  <li><strong>Iterators & generators</strong> — state is maintained via closure</li>
+  <li><strong>once() function</strong> — execute something only one time</li>
+</ul>
+
+<div class="itip">
+  <p><strong>Classic interview question: "What is a closure?"</strong> → Say: "A closure is a function bundled together with its lexical environment. When a function is returned from another function, it carries a reference to its outer scope's variables — even after the outer function's execution context has been deleted. Those variables are kept alive by the closure."</p>
+</div>
+
+<div class="pills">
+  <span class="pill pg">Closure</span><span class="pill pt">Lexical Environment</span>
+  <span class="pill pb">Reference (not value)</span><span class="pill pp">Data Hiding</span>
+</div>
+</section>
+
+<hr class="div">
+
+<!-- ═══════════════════════════════════════
+     EP 11 — SETTIMEOUT + CLOSURES
+═══════════════════════════════════════ -->
+<section class="lecture" id="lec11">
+<div class="lec-hd">
+  <div class="lec-badge">EP 11</div>
+  <div>
+    <div class="lec-title">setTimeout + Closures</div>
+    <div class="lec-sub">The interview question that makes senior developers pull their hair out</div>
+  </div>
+</div>
+
+<div class="akquote">Time and tide wait for none — and just like that, JavaScript also waits for none. JavaScript does not wait for setTimeout. It registers the callback, attaches a timer, and moves on.</div>
+
+<h3>How setTimeout Actually Works</h3>
+<pre data-lang="js"><code><span class="kw">function</span> <span class="fn">x</span>() {
+  <span class="kw">var</span> <span class="vr">i</span> = <span class="num">1</span>;
+  <span class="fn">setTimeout</span>(<span class="kw">function</span>() {
+    console.log(<span class="vr">i</span>); <span class="cmt">// this callback forms a closure over i</span>
+  }, <span class="num">1000</span>);
+  console.log(<span class="str">"Namaste JavaScript"</span>);
+}
+<span class="fn">x</span>();
+<span class="cmt">// Output:
+// "Namaste JavaScript"  ← prints immediately
+// 1                     ← prints after 1 second</span></code></pre>
+
+<p>What setTimeout does: takes the callback function → attaches a timer → stores it somewhere → <strong>JS moves on immediately</strong> without waiting → when the timer expires, the callback is put into the Callback Queue → Event Loop picks it up → runs it.</p>
+
+<h3>The Famous Interview Question — print 1 through 5 with delays</h3>
+<pre data-lang="js"><code><span class="cmt">// ✗ WRONG — what most developers write first:</span>
+<span class="kw">for</span> (<span class="kw">var</span> <span class="vr">i</span> = <span class="num">1</span>; <span class="vr">i</span> &lt;= <span class="num">5</span>; <span class="vr">i</span>++) {
+  <span class="fn">setTimeout</span>(<span class="kw">function</span>() {
+    console.log(<span class="vr">i</span>);
+  }, <span class="vr">i</span> * <span class="num">1000</span>);
+}
+<span class="cmt">// Output: 6 6 6 6 6  ← WHY?!</span></code></pre>
+
+<div class="box red-box">
+  <div class="box-label">Why does it print 6 five times?</div>
+  <strong>Because all five callback functions close over the SAME <code>i</code> variable reference.</strong> When the loop runs, JS doesn't wait for any timer — it rushes through all 5 iterations, incrementing <code>i</code> to 6. By the time any timer fires and the callbacks execute, <code>i</code> is already 6 in that shared memory location.
+</div>
+
+<h3>Solution 1 — Use let (block-scoped)</h3>
+<pre data-lang="js"><code><span class="cmt">// ✓ Fix 1 — let creates a NEW i for each iteration:</span>
+<span class="kw">for</span> (<span class="kw">let</span> <span class="vr">i</span> = <span class="num">1</span>; <span class="vr">i</span> &lt;= <span class="num">5</span>; <span class="vr">i</span>++) {
+  <span class="fn">setTimeout</span>(<span class="kw">function</span>() {
+    console.log(<span class="vr">i</span>); <span class="cmt">// each callback closes over its own i</span>
+  }, <span class="vr">i</span> * <span class="num">1000</span>);
+}
+<span class="cmt">// Output: 1 2 3 4 5 (each after 1, 2, 3, 4, 5 seconds)</span></code></pre>
+
+<p>With <code>let</code>, each loop iteration creates a <em>new copy</em> of <code>i</code> in its own block scope. Each callback closes over its own separate <code>i</code>.</p>
+
+<h3>Solution 2 — Use Closures with var (the hard way, but shows mastery)</h3>
+<pre data-lang="js"><code><span class="cmt">// ✓ Fix 2 — when interviewer says "use var only":</span>
+<span class="kw">for</span> (<span class="kw">var</span> <span class="vr">i</span> = <span class="num">1</span>; <span class="vr">i</span> &lt;= <span class="num">5</span>; <span class="vr">i</span>++) {
+  <span class="kw">function</span> <span class="fn">close</span>(<span class="vr">x</span>) {        <span class="cmt">// new function creates new scope</span>
+    <span class="fn">setTimeout</span>(<span class="kw">function</span>() {
+      console.log(<span class="vr">x</span>);        <span class="cmt">// x is a fresh copy each time</span>
+    }, <span class="vr">x</span> * <span class="num">1000</span>);
+  }
+  <span class="fn">close</span>(<span class="vr">i</span>);  <span class="cmt">// pass i as argument — creates new copy</span>
+}
+<span class="cmt">// Output: 1 2 3 4 5 ✓</span></code></pre>
+
+<div class="itip">
+  <p>This is the gold standard closure interview question. If an interviewer asks you to do it with only <code>var</code> and you can reach for a closure function to create a new scope — you've demonstrated deep understanding. <strong>Make closures work for you, not against you.</strong></p>
+</div>
+
+<div class="pills">
+  <span class="pill pg">setTimeout</span><span class="pill pt">Closure Reference</span>
+  <span class="pill pr">var loop bug</span><span class="pill pb">let fix</span>
+  <span class="pill pp">closure fix</span>
+</div>
+</section>
+
+<hr class="div">
+
+<!-- ═══════════════════════════════════════
+     EP 12 — CLOSURE INTERVIEW DEEP DIVE
+═══════════════════════════════════════ -->
+<section class="lecture" id="lec12">
+<div class="lec-hd">
+  <div class="lec-badge">EP 12</div>
+  <div>
+    <div class="lec-title">Closure Interview Deep Dive</div>
+    <div class="lec-sub">Data hiding, encapsulation, garbage collection, and the crazy interview questions</div>
+  </div>
+</div>
+
+<h3>Advantages of Closures</h3>
+<ul>
+  <li>Data hiding and encapsulation</li>
+  <li>Module design pattern</li>
+  <li>Currying and partial application</li>
+  <li>memoization</li>
+  <li>Maintaining state in async operations</li>
+</ul>
+
+<h3>Data Hiding with Closures</h3>
+<div class="akquote">Suppose we want a counter. If we use a global variable, anybody can modify it from anywhere. But with closures we can hide that data — nobody from outside can access the counter directly.</div>
+
+<pre data-lang="js"><code><span class="cmt">// Problem with global variable — anyone can tamper:</span>
+<span class="kw">var</span> <span class="vr">count</span> = <span class="num">0</span>;
+<span class="kw">function</span> <span class="fn">increment</span>() { <span class="vr">count</span>++; }
+<span class="cmt">// Bad: someone can do count = 1000; from anywhere</span>
+
+<span class="cmt">// Solution — use closure for data privacy:</span>
+<span class="kw">function</span> <span class="fn">counter</span>() {
+  <span class="kw">var</span> <span class="vr">count</span> = <span class="num">0</span>;  <span class="cmt">// private — no one outside can touch this</span>
+
+  <span class="kw">return</span> <span class="kw">function</span> <span class="fn">increment</span>() {
+    <span class="vr">count</span>++;
+    console.log(<span class="vr">count</span>);
+  }
+}
+
+<span class="kw">var</span> <span class="vr">counter1</span> = <span class="fn">counter</span>(); <span class="cmt">// independent counter</span>
+<span class="kw">var</span> <span class="vr">counter2</span> = <span class="fn">counter</span>(); <span class="cmt">// another independent counter</span>
+
+<span class="vr">counter1</span>(); <span class="cmt">// 1</span>
+<span class="vr">counter1</span>(); <span class="cmt">// 2</span>
+<span class="vr">counter2</span>(); <span class="cmt">// 1 ← completely separate closure, its own count</span></code></pre>
+
+<p>Each call to <code>counter()</code> creates a fresh closure with its own private <code>count</code>. They don't interfere with each other.</p>
+
+<h3>Disadvantages of Closures</h3>
+<div class="box red-box">
+  <div class="box-label">Memory Consumption</div>
+  Closures keep variables alive even after the outer function returns. If you have too many closures, or if they're holding large objects, those variables won't be garbage collected — leading to <strong>memory leaks</strong>.
+</div>
+
+<h3>What is a Garbage Collector?</h3>
+<p>The Garbage Collector is a program in the browser (or JS runtime) that frees up memory that is no longer being used. In languages like C/C++, developers had to manually free memory. In JS, the engine does it automatically.</p>
+
+<div class="box blue-box">
+  <div class="box-label">V8's Smart Garbage Collection</div>
+  Modern JS engines like V8 are very smart about closures. If a variable inside a closure is never actually referenced by the inner function, V8 may garbage collect it even though the closure is active. For example, if a closure has access to both <code>x</code> and <code>y</code> but only ever uses <code>x</code>, V8 can collect <code>y</code>.
+</div>
+
+<h3>Closure Gotchas in Interviews</h3>
+<pre data-lang="js"><code><span class="cmt">// Q: Do let declarations close over?</span>
+<span class="kw">function</span> <span class="fn">outer</span>() {
+  <span class="kw">let</span> <span class="vr">a</span> = <span class="num">10</span>;
+  <span class="kw">return</span> <span class="kw">function</span> <span class="fn">inner</span>() {
+    console.log(<span class="vr">a</span>);
+  }
+}
+<span class="fn">outer</span>()(); <span class="cmt">// → 10 ✓ Yes, let and const also close over</span>
+
+<span class="cmt">// Q: Do function parameters close over?</span>
+<span class="kw">function</span> <span class="fn">outer</span>(<span class="vr">str</span>) { <span class="cmt">// parameter = also part of lexical env</span>
+  <span class="kw">return</span> <span class="kw">function</span> <span class="fn">inner</span>() {
+    console.log(<span class="vr">str</span>);
+  }
+}
+<span class="fn">outer</span>(<span class="str">"hello"</span>)(); <span class="cmt">// → "hello" ✓ Yes, parameters close over too</span></code></pre>
+
+<div class="itip">
+  <p>The event loop question: if you attach an event listener to a button and inside the handler you reference a counter variable via closure — that closure keeps the counter alive as long as the button exists on the page. To free memory, you should remove the event listener when it's no longer needed using <code>removeEventListener</code>.</p>
+</div>
+
+<div class="pills">
+  <span class="pill pg">Data Hiding</span><span class="pill pt">Encapsulation</span>
+  <span class="pill pr">Memory Leak</span><span class="pill pb">Garbage Collection</span>
+  <span class="pill pp">V8 Smart GC</span>
+</div>
+</section>
+
+<hr class="div">
+
+<!-- ═══════════════════════════════════════
+     EP 13 — FIRST-CLASS FUNCTIONS
+═══════════════════════════════════════ -->
+<section class="lecture" id="lec13">
+<div class="lec-hd">
+  <div class="lec-badge">EP 13</div>
+  <div>
+    <div class="lec-title">First-Class Functions in JavaScript</div>
+    <div class="lec-sub">Function statement · expression · declaration · anonymous · named · arrow</div>
+  </div>
+</div>
+
+<div class="akquote">I was giving an interview at a very reputed Indian startup — a famous online food ordering app. The interviewer asked me: "What are first-class functions?" I got nervous. I had never heard this term before. I said I don't know. And I knew the interview was gone.</div>
+
+<h3>Function Statement (= Function Declaration)</h3>
+<p>The most basic way to create a function. Also called a <strong>function declaration</strong> — these two terms mean exactly the same thing.</p>
+<pre data-lang="js"><code><span class="kw">function</span> <span class="fn">a</span>() {
+  console.log(<span class="str">"function a called"</span>);
+}
+<span class="fn">a</span>(); <span class="cmt">// works</span></code></pre>
+
+<h3>Function Expression</h3>
+<p>A function assigned to a variable. <strong>Functions act like values in JS</strong> — you can assign them.</p>
+<pre data-lang="js"><code><span class="kw">var</span> <span class="vr">b</span> = <span class="kw">function</span>() {
+  console.log(<span class="str">"function b called"</span>);
+};
+<span class="vr">b</span>(); <span class="cmt">// works</span></code></pre>
+
+<h3>Key Difference: Hoisting</h3>
+<div class="box red-box">
+  <div class="box-label">The Major Difference</div>
+  <strong>Function statements are hoisted (full code in memory). Function expressions are NOT hoisted — treated as variables, stored as <code>undefined</code> until their line executes.</strong>
+</div>
+
+<pre data-lang="js"><code><span class="fn">a</span>(); <span class="cmt">// ✓ works — hoisted fully</span>
+<span class="vr">b</span>(); <span class="cmt">// ✗ TypeError: b is not a function — undefined until line 5</span>
+
+<span class="kw">function</span> <span class="fn">a</span>() { console.log(<span class="str">"a"</span>); }
+<span class="kw">var</span> <span class="vr">b</span> = <span class="kw">function</span>() { console.log(<span class="str">"b"</span>); };</code></pre>
+
+<h3>Anonymous Functions</h3>
+<p>A function with no name. <strong>Cannot be used as a function statement</strong> (ECMAScript spec requires a name). Used as <em>values</em> — assigned to variables, passed as arguments.</p>
+<pre data-lang="js"><code><span class="cmt">// ✗ SyntaxError — function statement requires a name:</span>
+<span class="kw">function</span>() {
+  console.log(<span class="str">"no name"</span>);
+}
+
+<span class="cmt">// ✓ Fine as a value (function expression):</span>
+<span class="kw">var</span> <span class="vr">fn</span> = <span class="kw">function</span>() {
+  console.log(<span class="str">"anonymous as value"</span>);
+};</code></pre>
+
+<h3>Named Function Expression</h3>
+<pre data-lang="js"><code><span class="kw">var</span> <span class="vr">b</span> = <span class="kw">function</span> <span class="fn">xyz</span>() {
+  console.log(<span class="str">"named fn expression"</span>);
+};
+<span class="vr">b</span>();    <span class="cmt">// ✓ works</span>
+<span class="fn">xyz</span>(); <span class="cmt">// ✗ ReferenceError — xyz is NOT in outer scope!</span>
+<span class="cmt">// xyz only exists as a local variable INSIDE the function itself</span></code></pre>
+
+<h3>Parameters vs Arguments</h3>
+<table>
+  <tr><th>Term</th><th>Definition</th><th>Example</th></tr>
+  <tr><td>Parameters</td><td>The labels/identifiers listed in the function definition. Local variables inside the function.</td><td><code>function fn(param1, param2)</code></td></tr>
+  <tr><td>Arguments</td><td>The actual values passed when the function is called.</td><td><code>fn(a1, a2)</code> — a1, a2 are arguments</td></tr>
+</table>
+
+<h3>First-Class Functions</h3>
+<div class="box gold-box">
+  <div class="box-label">Definition</div>
+  <strong>First-class functions</strong> = the ability of functions to be used as values — assigned to variables, passed as arguments to other functions, and returned from functions. This ability is also why functions are called <em>"first-class citizens"</em> in JavaScript.
+</div>
+
+<pre data-lang="js"><code><span class="cmt">// Functions passed as arguments:</span>
+<span class="kw">function</span> <span class="fn">execute</span>(<span class="vr">fn</span>) {
+  <span class="vr">fn</span>(); <span class="cmt">// fn is a function passed as argument</span>
+}
+<span class="fn">execute</span>(<span class="kw">function</span>() { console.log(<span class="str">"hi"</span>); });
+
+<span class="cmt">// Functions returned from functions:</span>
+<span class="kw">function</span> <span class="fn">outer</span>() {
+  <span class="kw">return</span> <span class="kw">function</span>() { <span class="cmt">// returning anonymous fn</span>
+    console.log(<span class="str">"returned!"</span>);
+  };
+}
+<span class="kw">var</span> <span class="vr">result</span> = <span class="fn">outer</span>();
+<span class="vr">result</span>(); <span class="cmt">// → "returned!"</span></code></pre>
+
+<div class="itip">
+  <p>"What are first-class functions?" → <strong>"The ability of functions to be used as values — assigned to variables, passed as arguments to other functions, and returned from other functions. This is also why functions are called first-class citizens in JavaScript."</strong> Give a code example of each.</p>
+</div>
+
+<div class="pills">
+  <span class="pill pg">First-Class Functions</span><span class="pill pt">Function Statement</span>
+  <span class="pill pb">Function Expression</span><span class="pill pr">Anonymous Function</span>
+  <span class="pill pp">Named Function Expr.</span>
+</div>
+</section>
+
+<hr class="div">
+
+<!-- ═══════════════════════════════════════
+     EP 14 — CALLBACK FUNCTIONS
+═══════════════════════════════════════ -->
+<section class="lecture" id="lec14">
+<div class="lec-hd">
+  <div class="lec-badge">EP 14</div>
+  <div>
+    <div class="lec-title">Callback Functions & Event Listeners</div>
+    <div class="lec-sub">How async operations are possible in a single-threaded language</div>
+  </div>
+</div>
+
+<div class="box gold-box">
+  <div class="box-label">Definition</div>
+  A <strong>callback function</strong> is a function passed as an argument to another function, to be called later — either after some time, or when a certain event occurs.
+</div>
+
+<pre data-lang="js"><code><span class="kw">function</span> <span class="fn">x</span>(<span class="vr">y</span>) {  <span class="cmt">// y is the callback</span>
+  console.log(<span class="str">"x is executing"</span>);
+  <span class="vr">y</span>(); <span class="cmt">// calling the callback</span>
+}
+
+<span class="fn">x</span>(<span class="kw">function</span> <span class="fn">y</span>() {
+  console.log(<span class="str">"y was called back"</span>);
+});</code></pre>
+
+<h3>Callbacks Give JS Superpowers</h3>
+<div class="akquote">JavaScript is a single-threaded language. It can only do one thing at a time. But callbacks give us the power of asynchronous programming — we can register something to happen later, and JS moves on without waiting.</div>
+
+<pre data-lang="js"><code><span class="fn">setTimeout</span>(<span class="kw">function</span>() {
+  console.log(<span class="str">"runs after 5 seconds"</span>);
+}, <span class="num">5000</span>);
+console.log(<span class="str">"this runs immediately"</span>);
+<span class="cmt">// Output:
+// "this runs immediately"
+// "runs after 5 seconds" (5 seconds later)</span></code></pre>
+
+<h3>Event Listeners with Closures</h3>
+<pre data-lang="js"><code><span class="kw">function</span> <span class="fn">attachEventListener</span>() {
+  <span class="kw">let</span> <span class="vr">count</span> = <span class="num">0</span>; <span class="cmt">// private thanks to closure</span>
+  document.<span class="fn">getElementById</span>(<span class="str">"btn"</span>)
+    .<span class="fn">addEventListener</span>(<span class="str">"click"</span>, <span class="kw">function</span>() {
+      <span class="vr">count</span>++;               <span class="cmt">// remembers count via closure</span>
+      console.log(<span class="str">"clicked"</span>, <span class="vr">count</span>);
+    });
+}
+<span class="fn">attachEventListener</span>();</code></pre>
+
+<h3>Blocking the Main Thread — Don't Do This</h3>
+<div class="box red-box">
+  <div class="box-label">⚠️ Important Warning</div>
+  JS has only one Call Stack. If you run a very heavy operation (like a 10-million loop) synchronously, <strong>the entire browser freezes</strong> — no clicks, no scrolls, nothing responds. This is called <em>blocking the main thread</em>. Always use async patterns (callbacks, promises, etc.) for heavy work.
+</div>
+
+<h3>Garbage Collection & Event Listeners</h3>
+<p>Event listeners are heavy — they hold closures in memory. If you attach thousands of event listeners and never remove them, memory accumulates. Always use <code>removeEventListener</code> when you no longer need the handler.</p>
+
+<div class="pills">
+  <span class="pill pg">Callback Function</span><span class="pill pt">Event Listener</span>
+  <span class="pill pb">Async Programming</span><span class="pill pr">Blocking Main Thread</span>
+</div>
+</section>
+
+<hr class="div">
+
+<!-- ═══════════════════════════════════════
+     EP 15 — EVENT LOOP
+═══════════════════════════════════════ -->
+<section class="lecture" id="lec15">
+<div class="lec-hd">
+  <div class="lec-badge">EP 15</div>
+  <div>
+    <div class="lec-title">The Event Loop, Web APIs & Queues</div>
+    <div class="lec-sub">The most important video — how the browser handles async JS</div>
+  </div>
+</div>
+
+<div class="box gold-box">
+  <div class="box-label">90% of developers don't understand this</div>
+  After watching this episode, you will have a crystal-clear understanding of the Event Loop, Callback Queue, Microtask Queue — everything that happens inside the browser when JS runs.
+</div>
+
+<h3>The Browser is a Superpower</h3>
+<p>The JS engine (Call Stack) is just one part of the browser. The browser also has:</p>
+<div class="grid2">
+  <div class="card">
+    <div class="card-title">Local Storage</div>
+    <div class="card-val">Persistent key-value storage in the browser</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Timer (setTimeout, setInterval)</div>
+    <div class="card-val">Browser manages timers — not JS engine</div>
+  </div>
+  <div class="card">
+    <div class="card-title">DOM APIs</div>
+    <div class="card-val">document.getElementById, etc. — provided by browser</div>
+  </div>
+  <div class="card">
+    <div class="card-title">fetch / XMLHttpRequest</div>
+    <div class="card-val">Network requests — browser's power, not JS's</div>
+  </div>
+</div>
+
+<h3>Web APIs — The Bridge</h3>
+<div class="akquote">The browser gives JavaScript access to all its superpowers through the window object. setTimeout, fetch, document — these are all given to JS by the browser. JS itself has no clue about the DOM — it's the browser that wraps everything in the global window object and gives JS access.</div>
+
+<h3>How setTimeout Works — Full Picture</h3>
+<div class="diag"><span class="dg">JS Engine                Browser APIs             Callback Queue
+</span><span class="db">┌──────────────┐          ┌───────────────┐         ┌─────────────┐
+│  Call Stack  │          │  setTimeout   │         │  callback1  │
+│              │  ──────► │  timer: 5000ms│         │  callback2  │
+│  GEC (runs)  │          │  stores cb    │ ──────► │  ...        │
+│              │          └───────────────┘         └─────────────┘
+└──────────────┘                                           │
+       ▲                                                   │
+       └───────────────── Event Loop ─────────────────────┘
+                   (watches: Is Call Stack empty?
+                    If yes → push callback from queue)</span></div>
+
+<h3>The Event Loop</h3>
+<div class="box teal-box">
+  <div class="box-label">Definition</div>
+  The Event Loop has one job: <strong>continuously monitor the Call Stack and the Callback Queue</strong>. When the Call Stack is empty AND there's a callback waiting in the queue → the Event Loop picks the callback and pushes it into the Call Stack to execute.
+</div>
+
+<h3>The Callback Queue</h3>
+<p>When a timer expires, or an event fires, the callback goes into the <strong>Callback Queue</strong> (also called Task Queue / Macrotask Queue). The Event Loop picks from here when the Call Stack is empty.</p>
+
+<h3>The Microtask Queue — Higher Priority</h3>
+<div class="box purple-box">
+  <div class="box-label">Very Important — Asked in Interviews</div>
+  There is a <strong>Microtask Queue</strong> that has <em>higher priority</em> than the Callback Queue. Callbacks from <strong>Promises</strong> and <strong>MutationObserver</strong> go into the Microtask Queue. The Event Loop always drains the entire Microtask Queue before picking anything from the Callback Queue.
+</div>
+
+<pre data-lang="js"><code><span class="fn">setTimeout</span>(<span class="kw">function</span>() {
+  console.log(<span class="str">"setTimeout callback"</span>); <span class="cmt">// Callback Queue</span>
+}, <span class="num">0</span>);
+
+Promise.<span class="fn">resolve</span>().<span class="fn">then</span>(<span class="kw">function</span>() {
+  console.log(<span class="str">"Promise callback"</span>);    <span class="cmt">// Microtask Queue</span>
+});
+
+console.log(<span class="str">"synchronous"</span>);
+<span class="cmt">// Output:
+// "synchronous"
+// "Promise callback"   ← Microtask Queue runs first!
+// "setTimeout callback" ← Callback Queue runs after</span></code></pre>
+
+<h3>Starvation of Callback Queue</h3>
+<p>If the Microtask Queue keeps generating new microtasks (e.g., a promise that resolves another promise that resolves another…), the Callback Queue tasks may <strong>never get to execute</strong>. This is called <strong>starvation</strong>.</p>
+
+<div class="itip">
+  <p>"Explain the Event Loop." → <strong>"The Event Loop monitors the Call Stack and the Callback Queue. When the Call Stack is empty, it picks tasks from the Microtask Queue first (promises, MutationObserver), then from the Callback Queue (setTimeout, events). The Microtask Queue has higher priority."</strong></p>
+</div>
+
+<div class="pills">
+  <span class="pill pg">Event Loop</span><span class="pill pt">Callback Queue</span>
+  <span class="pill pb">Microtask Queue</span><span class="pill pr">Starvation</span>
+  <span class="pill pp">Web APIs</span>
+</div>
+</section>
+
+<hr class="div">
+
+<!-- ═══════════════════════════════════════
+     EP 16 — JS ENGINE & RUNTIME
+═══════════════════════════════════════ -->
+<section class="lecture" id="lec16">
+<div class="lec-hd">
+  <div class="lec-badge">EP 16</div>
+  <div>
+    <div class="lec-title">JavaScript Engine, Runtime & V8</div>
+    <div class="lec-sub">What actually happens inside the V8 engine when your code runs</div>
+  </div>
+</div>
+
+<h3>JavaScript Runtime Environment</h3>
+<div class="box gold-box">
+  <div class="box-label">Definition</div>
+  A <strong>JavaScript Runtime Environment</strong> is a big container with everything needed to run JS code: the JS Engine, APIs, Event Loop, Callback Queue, and Microtask Queue. <em>Without a runtime environment, JS is impossible to run.</em>
+</div>
+
+<div class="grid2">
+  <div class="card">
+    <div class="card-title">Browser Runtime</div>
+    <div class="card-val">window object wraps all browser APIs. V8 (Chrome), SpiderMonkey (Firefox), JavaScriptCore (Safari)</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Node.js Runtime</div>
+    <div class="card-val">Open-source runtime environment. Uses V8 inside but replaces browser APIs with Node-specific APIs (fs, http, etc.)</div>
+  </div>
+</div>
+
+<h3>The JS Engine — Common Myths</h3>
+<div class="akquote">A lot of developers get confused and think the JS engine is some magical machine. No — it is just a normal program! A program written to execute JavaScript code. It is not a physical machine, not hardware — just software written in some language (like C++).</div>
+
+<h3>Inside the V8 JS Engine</h3>
+<p>When you give your code to the JS engine, three major steps happen:</p>
+
+<div class="grid3">
+  <div class="card">
+    <div class="card-title">1. Parsing</div>
+    <div class="card-val">Code is broken into tokens, then parsed into an <strong>Abstract Syntax Tree (AST)</strong> — a structured tree representation of your code.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">2. Compilation</div>
+    <div class="card-val">The AST is compiled. Modern JS engines use <strong>Just-In-Time (JIT) compilation</strong> — both interpreter and compiler work together.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">3. Execution</div>
+    <div class="card-val">The code executes using the Call Stack (Memory Heap + Call Stack). The Garbage Collector works alongside.</div>
+  </div>
+</div>
+
+<h3>Is JavaScript Interpreted or Compiled?</h3>
+<div class="box blue-box">
+  <div class="box-label">Interesting Interview Question</div>
+  JavaScript was originally designed as an interpreted language. But today, modern browsers use <strong>Just-In-Time (JIT) compilation</strong> — a mix of both. The interpreter runs the code fast without waiting for full compilation, while the compiler simultaneously optimizes hot code paths. It's both, not just one.
+</div>
+
+<h3>JIT Compilation in V8</h3>
+<div class="diag"><span class="dg">Your Code (JS)
+</span><span class="db">      │
+      ▼
+</span><span class="dt">  Parsing → AST (Abstract Syntax Tree)
+</span><span class="db">      │
+      ▼
+</span><span class="dp">  Ignition Interpreter  → produces Bytecode (executes fast)
+</span><span class="db">      │
+      ▼ (for frequently-run "hot" code)
+</span><span class="dg">  TurboFan Compiler    → produces optimized Machine Code
+</span><span class="db">      │
+      ▼
+  Execution at machine speed ⚡</span></div>
+
+<h3>Garbage Collector — Mark & Sweep</h3>
+<p>JS engines use the <strong>Mark and Sweep algorithm</strong>. The GC marks all variables that are reachable from the root (global object), then sweeps and frees anything that was NOT marked. This is how memory is automatically managed.</p>
+
+<div class="pills">
+  <span class="pill pg">V8 Engine</span><span class="pill pt">JIT Compilation</span>
+  <span class="pill pb">AST</span><span class="pill pr">Garbage Collector</span>
+  <span class="pill pp">Mark & Sweep</span><span class="pill pt">Ignition & TurboFan</span>
+</div>
+</section>
+
+<hr class="div">
+
+<!-- ═══════════════════════════════════════
+     EP 17 — TRUST ISSUES WITH SETTIMEOUT
+═══════════════════════════════════════ -->
+<section class="lecture" id="lec17">
+<div class="lec-hd">
+  <div class="lec-badge">EP 17</div>
+  <div>
+    <div class="lec-title">Trust Issues with setTimeout</div>
+    <div class="lec-sub">Why setTimeout(fn, 5000) does NOT always run after exactly 5 seconds</div>
+  </div>
+</div>
+
+<div class="box red-box">
+  <div class="box-label">⚠️ setTimeout Does NOT Guarantee Exact Timing</div>
+  <code>setTimeout(fn, 5000)</code> does not guarantee the callback runs after exactly 5 seconds. It means the callback will run <em>after at least 5 seconds</em> — depending on what the Call Stack is doing.
+</div>
+
+<h3>Why the Delay Can Be Longer</h3>
+<pre data-lang="js"><code><span class="fn">setTimeout</span>(<span class="kw">function</span>() {
+  console.log(<span class="str">"callback"</span>);
+}, <span class="num">5000</span>);
+
+<span class="cmt">// Blocking code that takes 10 seconds:</span>
+<span class="kw">let</span> <span class="vr">startDate</span> = <span class="kw">new</span> Date().<span class="fn">getTime</span>();
+<span class="kw">let</span> <span class="vr">endDate</span> = <span class="vr">startDate</span>;
+<span class="kw">while</span> (<span class="vr">endDate</span> &lt; <span class="vr">startDate</span> + <span class="num">10000</span>) {
+  <span class="vr">endDate</span> = <span class="kw">new</span> Date().<span class="fn">getTime</span>();
+}
+<span class="cmt">// "callback" runs after ~10 seconds, not 5!
+// Because the while loop blocks the Call Stack for 10 seconds.
+// The callback was waiting in the queue during that time.</span></code></pre>
+
+<div class="akquote">The Event Loop will only give the callback a chance to execute when the Call Stack is empty. If the Call Stack is occupied for 10 seconds with blocking code, the callback waits even though its timer expired at 5 seconds. The timer is a minimum, not a guarantee.</div>
+
+<h3>setTimeout(fn, 0) — What Does It Mean?</h3>
+<pre data-lang="js"><code><span class="fn">setTimeout</span>(<span class="kw">function</span>() {
+  console.log(<span class="str">"setTimeout 0"</span>);
+}, <span class="num">0</span>);
+console.log(<span class="str">"sync"</span>);
+<span class="cmt">// Output:
+// "sync"           ← runs first (Call Stack)
+// "setTimeout 0"   ← runs after (Callback Queue, after stack is empty)</span></code></div>
+
+<p><code>setTimeout(fn, 0)</code> doesn't mean "run immediately." It means "run as soon as the Call Stack is empty." It still goes through the Callback Queue mechanism. A delay of 0ms is the minimum possible delay, not instant execution.</p>
+
+<h3>Concurrency Model in JavaScript</h3>
+<p>JS achieves concurrent-like behaviour through its Event Loop + Web APIs + Callback Queue pattern. Even though JS is single-threaded, the browser can do multiple things (timers, network calls, event listeners) in parallel — the JS engine just picks up the results when it's free.</p>
+
+<div class="pills">
+  <span class="pill pg">setTimeout timing</span><span class="pill pr">Blocking Call Stack</span>
+  <span class="pill pb">Concurrency Model</span><span class="pill pt">setTimeout(fn, 0)</span>
+</div>
+</section>
+
+<hr class="div">
+
+<!-- ═══════════════════════════════════════
+     EP 18 — HIGHER-ORDER FUNCTIONS
+═══════════════════════════════════════ -->
+<section class="lecture" id="lec18">
+<div class="lec-hd">
+  <div class="lec-badge">EP 18</div>
+  <div>
+    <div class="lec-title">Higher-Order Functions & Functional Programming</div>
+    <div class="lec-sub">How to write interview-quality code + the DRY principle</div>
+  </div>
+</div>
+
+<div class="box gold-box">
+  <div class="box-label">Definition</div>
+  A <strong>Higher-Order Function</strong> is a function that either:
+  <ul style="margin:8px 0 0 16px;">
+    <li>Takes another function as an argument (callback), OR</li>
+    <li>Returns a function from it</li>
+  </ul>
+</div>
+
+<h3>The Problem — Copy-Paste Programming</h3>
+<div class="akquote">In interviews, I have seen a lot of people just copy-pasting. They write the formula again and again in three different functions. That is not good code. The interviewer is testing whether you can think modularly.</div>
+
+<pre data-lang="js"><code><span class="cmt">// ✗ BAD — DRY violation (Don't Repeat Yourself):</span>
+<span class="kw">const</span> <span class="vr">radius</span> = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>];
+
+<span class="kw">const</span> <span class="fn">calculateArea</span> = (<span class="vr">radius</span>) => {
+  <span class="kw">const</span> <span class="vr">output</span> = [];
+  <span class="kw">for</span> (<span class="kw">let</span> <span class="vr">i</span> = <span class="num">0</span>; <span class="vr">i</span> &lt; <span class="vr">radius</span>.length; <span class="vr">i</span>++) {
+    <span class="vr">output</span>.<span class="fn">push</span>(Math.PI * <span class="vr">radius</span>[<span class="vr">i</span>] ** <span class="num">2</span>); <span class="cmt">// logic repeated below</span>
+  }
+  <span class="kw">return</span> <span class="vr">output</span>;
+};
+<span class="kw">const</span> <span class="fn">calculateCircumference</span> = (<span class="vr">radius</span>) => {
+  <span class="kw">const</span> <span class="vr">output</span> = [];
+  <span class="kw">for</span> (<span class="kw">let</span> <span class="vr">i</span> = <span class="num">0</span>; <span class="vr">i</span> &lt; <span class="vr">radius</span>.length; <span class="vr">i</span>++) {
+    <span class="vr">output</span>.<span class="fn">push</span>(<span class="num">2</span> * Math.PI * <span class="vr">radius</span>[<span class="vr">i</span>]); <span class="cmt">// 90% same code!</span>
+  }
+  <span class="kw">return</span> <span class="vr">output</span>;
+};</code></pre>
+
+<h3>The Solution — Functional Style with Higher-Order Functions</h3>
+<pre data-lang="js"><code><span class="cmt">// ✓ GOOD — extract logic, pass it in:</span>
+<span class="kw">const</span> <span class="fn">area</span> = (<span class="vr">r</span>) => Math.PI * <span class="vr">r</span> ** <span class="num">2</span>;
+<span class="kw">const</span> <span class="fn">circumference</span> = (<span class="vr">r</span>) => <span class="num">2</span> * Math.PI * <span class="vr">r</span>;
+<span class="kw">const</span> <span class="fn">diameter</span> = (<span class="vr">r</span>) => <span class="num">2</span> * <span class="vr">r</span>;
+
+<span class="cmt">// One generic higher-order function — the only loop:</span>
+<span class="kw">const</span> <span class="fn">calculate</span> = (<span class="vr">radius</span>, <span class="vr">logic</span>) => {
+  <span class="kw">const</span> <span class="vr">output</span> = [];
+  <span class="kw">for</span> (<span class="kw">let</span> <span class="vr">i</span> = <span class="num">0</span>; <span class="vr">i</span> &lt; <span class="vr">radius</span>.length; <span class="vr">i</span>++) {
+    <span class="vr">output</span>.<span class="fn">push</span>(<span class="vr">logic</span>(<span class="vr">radius</span>[<span class="vr">i</span>]));  <span class="cmt">// call the logic callback</span>
+  }
+  <span class="kw">return</span> <span class="vr">output</span>;
+};
+
+console.log(<span class="fn">calculate</span>(<span class="vr">radius</span>, <span class="fn">area</span>));
+console.log(<span class="fn">calculate</span>(<span class="vr">radius</span>, <span class="fn">circumference</span>));
+console.log(<span class="fn">calculate</span>(<span class="vr">radius</span>, <span class="fn">diameter</span>));</code></pre>
+
+<div class="box teal-box">
+  <div class="box-label">This IS a Polyfill of map()</div>
+  The <code>calculate</code> function above is almost exactly what <code>Array.prototype.map()</code> does internally. Each unit function (<code>area</code>, <code>circumference</code>, <code>diameter</code>) has exactly one responsibility. This is the essence of functional programming.
+</div>
+
+<h3>Principles Demonstrated</h3>
+<ul>
+  <li><strong>DRY</strong> — Don't Repeat Yourself. The loop is written once.</li>
+  <li><strong>Single Responsibility</strong> — each function does exactly one thing.</li>
+  <li><strong>Composability</strong> — mix and match logic functions freely.</li>
+  <li><strong>Modularity</strong> — small, testable, reusable units.</li>
+</ul>
+
+<div class="itip">
+  <p>In your coding round interview: <strong>don't just solve the problem — solve it modularly</strong>. Break down your logic into small functions, pass the logic as callbacks. This shows the interviewer you understand functional programming and clean code principles.</p>
+</div>
+
+<div class="pills">
+  <span class="pill pg">Higher-Order Function</span><span class="pill pt">DRY Principle</span>
+  <span class="pill pb">Functional Programming</span><span class="pill pp">Single Responsibility</span>
+</div>
+</section>
+
+<hr class="div">
+
+<!-- ═══════════════════════════════════════
+     EP 19 — MAP · FILTER · REDUCE
+═══════════════════════════════════════ -->
+<section class="lecture" id="lec19">
+<div class="lec-hd">
+  <div class="lec-badge">EP 19</div>
+  <div>
+    <div class="lec-title">map · filter · reduce</div>
+    <div class="lec-sub">The three most important higher-order functions in JavaScript</div>
+  </div>
+</div>
+
+<h3>Array.map() — Transform Each Element</h3>
+<div class="box gold-box">
+  <div class="box-label">When to use map</div>
+  Use <code>map</code> when you want to <strong>transform each element</strong> of an array and get a <em>new array of the same length</em> with the transformed values.
+</div>
+
+<pre data-lang="js"><code><span class="kw">const</span> <span class="vr">arr</span> = [<span class="num">5</span>, <span class="num">1</span>, <span class="num">3</span>, <span class="num">2</span>, <span class="num">6</span>];
+
+<span class="cmt">// Double each value:</span>
+<span class="kw">const</span> <span class="fn">double</span> = (<span class="vr">x</span>) => <span class="vr">x</span> * <span class="num">2</span>;
+console.log(<span class="vr">arr</span>.<span class="fn">map</span>(<span class="fn">double</span>)); <span class="cmt">// [10, 2, 6, 4, 12]</span>
+
+<span class="cmt">// Triple — inline arrow function:</span>
+console.log(<span class="vr">arr</span>.<span class="fn">map</span>(<span class="vr">x</span> => <span class="vr">x</span> * <span class="num">3</span>)); <span class="cmt">// [15, 3, 9, 6, 18]</span>
+
+<span class="cmt">// Convert to binary:</span>
+console.log(<span class="vr">arr</span>.<span class="fn">map</span>(<span class="vr">x</span> => <span class="vr">x</span>.<span class="fn">toString</span>(<span class="num">2</span>))); <span class="cmt">// ["101","1","11","10","110"]</span></code></pre>
+
+<h3>Array.filter() — Keep Elements That Pass a Test</h3>
+<div class="box gold-box">
+  <div class="box-label">When to use filter</div>
+  Use <code>filter</code> when you want to <strong>filter elements</strong> based on a condition. Returns a new array with only elements where the callback returns <code>true</code>.
+</div>
+
+<pre data-lang="js"><code><span class="kw">const</span> <span class="vr">arr</span> = [<span class="num">5</span>, <span class="num">1</span>, <span class="num">3</span>, <span class="num">2</span>, <span class="num">6</span>];
+
+<span class="cmt">// Only odd numbers:</span>
+console.log(<span class="vr">arr</span>.<span class="fn">filter</span>(<span class="vr">x</span> => <span class="vr">x</span> % <span class="num">2</span> !== <span class="num">0</span>)); <span class="cmt">// [5, 1, 3]</span>
+
+<span class="cmt">// Only even numbers:</span>
+console.log(<span class="vr">arr</span>.<span class="fn">filter</span>(<span class="vr">x</span> => <span class="vr">x</span> % <span class="num">2</span> === <span class="num">0</span>)); <span class="cmt">// [2, 6]</span>
+
+<span class="cmt">// Only values greater than 4:</span>
+console.log(<span class="vr">arr</span>.<span class="fn">filter</span>(<span class="vr">x</span> => <span class="vr">x</span> > <span class="num">4</span>));          <span class="cmt">// [5, 6]</span></code></pre>
+
+<h3>Array.reduce() — Reduce to a Single Value</h3>
+<div class="box gold-box">
+  <div class="box-label">When to use reduce</div>
+  Use <code>reduce</code> when you need to <strong>iterate over all elements and produce a single value</strong> — a sum, a max, an object, anything. The accumulator holds the running result.
+</div>
+
+<div class="akquote">If I was given the option, I would never name this function "reduce" — because it's so confusing. But it's called reduce, so here we are. Just think of it as: iterate + accumulate → single output.</div>
+
+<pre data-lang="js"><code><span class="kw">const</span> <span class="vr">arr</span> = [<span class="num">5</span>, <span class="num">1</span>, <span class="num">3</span>, <span class="num">2</span>, <span class="num">6</span>];
+
+<span class="cmt">// Sum of all elements:</span>
+<span class="kw">const</span> <span class="vr">sum</span> = <span class="vr">arr</span>.<span class="fn">reduce</span>((<span class="vr">acc</span>, <span class="vr">curr</span>) => <span class="vr">acc</span> + <span class="vr">curr</span>, <span class="num">0</span>);
+console.log(<span class="vr">sum</span>); <span class="cmt">// 17</span>
+<span class="cmt">//  acc starts at 0 (initial value)
+//  each iteration: acc = acc + curr</span>
+
+<span class="cmt">// Maximum element:</span>
+<span class="kw">const</span> <span class="vr">max</span> = <span class="vr">arr</span>.<span class="fn">reduce</span>((<span class="vr">acc</span>, <span class="vr">curr</span>) => {
+  <span class="kw">if</span> (<span class="vr">curr</span> > <span class="vr">acc</span>) <span class="vr">acc</span> = <span class="vr">curr</span>;
+  <span class="kw">return</span> <span class="vr">acc</span>;
+}, <span class="num">0</span>);
+console.log(<span class="vr">max</span>); <span class="cmt">// 6</span></code></pre>
+
+<h3>Advanced Example — Count Occurrences (reduce → object)</h3>
+<pre data-lang="js"><code><span class="kw">const</span> <span class="vr">users</span> = [
+  { firstName: <span class="str">"Akshay"</span>, lastName: <span class="str">"Saini"</span>, age: <span class="num">26</span> },
+  { firstName: <span class="str">"Donald"</span>, lastName: <span class="str">"Trump"</span>, age: <span class="num">75</span> },
+  { firstName: <span class="str">"Elon"</span>, lastName: <span class="str">"Musk"</span>, age: <span class="num">50</span> },
+  { firstName: <span class="str">"Deepika"</span>, lastName: <span class="str">"Padukone"</span>, age: <span class="num">26</span> },
+];
+
+<span class="cmt">// Count users per age group:</span>
+<span class="kw">const</span> <span class="vr">ageCount</span> = <span class="vr">users</span>.<span class="fn">reduce</span>((<span class="vr">acc</span>, <span class="vr">curr</span>) => {
+  <span class="kw">if</span> (<span class="vr">acc</span>[<span class="vr">curr</span>.<span class="prop">age</span>]) {
+    <span class="vr">acc</span>[<span class="vr">curr</span>.<span class="prop">age</span>]++;
+  } <span class="kw">else</span> {
+    <span class="vr">acc</span>[<span class="vr">curr</span>.<span class="prop">age</span>] = <span class="num">1</span>;
+  }
+  <span class="kw">return</span> <span class="vr">acc</span>;
+}, {}); <span class="cmt">// initial value is empty object</span>
+console.log(<span class="vr">ageCount</span>); <span class="cmt">// { 26: 2, 75: 1, 50: 1 }</span></code></pre>
+
+<h3>Chaining map + filter + reduce</h3>
+<pre data-lang="js"><code><span class="cmt">// First names of all users under 30:</span>
+<span class="kw">const</span> <span class="vr">youngFirstNames</span> = <span class="vr">users</span>
+  .<span class="fn">filter</span>((<span class="vr">x</span>) => <span class="vr">x</span>.<span class="prop">age</span> &lt; <span class="num">30</span>)      <span class="cmt">// keep age < 30</span>
+  .<span class="fn">map</span>((<span class="vr">x</span>) => <span class="vr">x</span>.<span class="prop">firstName</span>);        <span class="cmt">// extract firstName</span>
+
+console.log(<span class="vr">youngFirstNames</span>); <span class="cmt">// ["Akshay", "Deepika"]</span></code></pre>
+
+<h3>Quick Reference</h3>
+<table>
+  <tr><th>Function</th><th>Input</th><th>Output</th><th>Use when</th></tr>
+  <tr><td><code>map()</code></td><td>Array of n items</td><td>Array of n items (transformed)</td><td>You need to transform every element</td></tr>
+  <tr><td><code>filter()</code></td><td>Array of n items</td><td>Array of ≤ n items (filtered)</td><td>You need to keep only matching elements</td></tr>
+  <tr><td><code>reduce()</code></td><td>Array of n items</td><td>Single value (any type)</td><td>You need to produce one result from all elements</td></tr>
+</table>
+
+<div class="box purple-box">
+  <div class="box-label">Homework Challenge</div>
+  Try to solve this using <strong>only <code>reduce</code></strong>: Get the first names of all users under 30. No filter, no map — just one reduce call. Write it in the comments below if you're watching on YouTube!
+</div>
+
+<div class="pills">
+  <span class="pill pg">map()</span><span class="pill pt">filter()</span>
+  <span class="pill pb">reduce()</span><span class="pill pp">Method Chaining</span>
+  <span class="pill pr">Functional Programming</span>
+</div>
+</section>
+
+<hr class="div">
+
+<!-- ═══════════════════════════════════════
+     MASTER SUMMARY
+═══════════════════════════════════════ -->
+<section style="margin-bottom:80px;">
+<div class="lec-hd">
+  <div class="lec-badge">SUMMARY</div>
+  <div>
+    <div class="lec-title">The Complete Mental Model</div>
+    <div class="lec-sub">Everything at a glance — the JS universe</div>
+  </div>
+</div>
+
+<div class="box gold-box">
+  <div class="box-label">The JS Universe — How Everything Connects</div>
+  <ul style="margin-top:8px;">
+    <li><strong>Execution Context</strong> is the foundation — everything in JS happens inside one.</li>
+    <li><strong>Two phases</strong>: Memory Creation (Phase 1) → Code Execution (Phase 2). Phase 1 explains hoisting.</li>
+    <li><strong>Call Stack</strong> manages execution context order. GEC is always at the bottom.</li>
+    <li><strong>Lexical Environment</strong> = local memory + parent reference. Forms the Scope Chain.</li>
+    <li><strong>Closures</strong> = function + its lexical environment, even when executed far away. Remembers reference, not value.</li>
+    <li><strong>let/const</strong> are hoisted but in the TDZ. const can't be reassigned. Both are block-scoped.</li>
+    <li><strong>First-class functions</strong> = functions as values. This enables callbacks, closures, HOFs, map/filter/reduce.</li>
+    <li><strong>Event Loop</strong> = watches Call Stack + queues. Microtask Queue > Callback Queue in priority.</li>
+    <li><strong>V8</strong> = parses → AST → Ignition interprets → TurboFan compiles hot paths → GC cleans up.</li>
+    <li><strong>map</strong> transforms. <strong>filter</strong> keeps. <strong>reduce</strong> accumulates to one value.</li>
+  </ul>
+</div>
+
+<div class="itip">
+  <p><strong>Time and tide wait for none — and JavaScript also waits for none.</strong> — Akshay Saini's favourite analogy, and the key to understanding async JS.</p>
+</div>
+</section>
+
+</main>
+
+<script>
+// Progress bar
+window.addEventListener('scroll', () => {
+  const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+  document.getElementById('prog-fill').style.width = pct + '%';
+});
+
+// Active nav link
+const secs = document.querySelectorAll('.lecture[id], section[id]');
+const links = document.querySelectorAll('.nav-link');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      links.forEach(l => l.classList.remove('active'));
+      const a = document.querySelector(`.nav-link[href="#${e.target.id}"]`);
+      if (a) a.classList.add('active');
+    }
+  });
+}, { rootMargin: '-25% 0px -65% 0px' });
+secs.forEach(s => obs.observe(s));
+
+// Search
+document.getElementById('srch').addEventListener('input', function() {
+  const q = this.value.toLowerCase().trim();
+  links.forEach(l => {
+    l.style.display = (!q || l.textContent.toLowerCase().includes(q)) ? 'flex' : 'none';
+  });
+});
+</script>
+</body>
+</html>
